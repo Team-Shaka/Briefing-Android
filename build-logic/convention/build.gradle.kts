@@ -6,18 +6,9 @@ plugins {
     `kotlin-dsl`
 }
 
-//java {
-//    sourceCompatibility = JavaVersion.VERSION_18
-//    targetCompatibility = JavaVersion.VERSION_18
-//}
-//tasks.withType<KotlinCompile>().configureEach {
-//    kotlinOptions {
-//        jvmTarget = JavaVersion.VERSION_18.toString()
-//    }
-//}
-
 dependencies {
     compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
 }
@@ -33,6 +24,31 @@ gradlePlugin {
             id = "store.newsbriefing.app.buildlogic.plugin.android.application"
             implementationClass =
                 "store.newsbriefing.app.buildlogic.plugin.AndroidApplicationConventionPlugin"
+        }
+        register("androidLibrary") {
+            id = "store.newsbriefing.app.buildlogic.plugin.android.library"
+            implementationClass =
+                "store.newsbriefing.app.buildlogic.plugin.AndroidLibraryConventionPlugin"
+        }
+        register("androidLibraryCompose") {
+            id = "store.newsbriefing.app.buildlogic.plugin.android.library.compose"
+            implementationClass =
+                "store.newsbriefing.app.buildlogic.plugin.AndroidLibraryComposeConventionPlugin"
+        }
+        register("androidHilt") {
+            id = "store.newsbriefing.app.buildlogic.plugin.android.hilt"
+            implementationClass =
+                "store.newsbriefing.app.buildlogic.plugin.AndroidHiltConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = "store.newsbriefing.app.buildlogic.plugin.jvm.library"
+            implementationClass =
+                "store.newsbriefing.app.buildlogic.plugin.JvmLibraryConventionPlugin"
+        }
+        register("androidFeature") {
+            id = "store.newsbriefing.app.buildlogic.plugin.android.feature"
+            implementationClass =
+                "store.newsbriefing.app.buildlogic.plugin.AndroidFeatureConventionPlugin"
         }
     }
 }

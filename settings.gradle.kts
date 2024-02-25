@@ -15,4 +15,14 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Briefing"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
+include(":core:designsystem")
+include(":core:model")
+include(":core:network")
+include(":core:data")
+include(":core:ui")
+include(":feature:settings")
+include(":core:domain")
+include(":core:common")

@@ -1,4 +1,4 @@
-package com.dev.briefing.ui.theme
+package store.newsbriefing.app.core.designsystem.theme
 
 import android.app.Activity
 import android.os.Build

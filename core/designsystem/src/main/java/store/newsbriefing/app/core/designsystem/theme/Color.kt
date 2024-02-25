@@ -1,4 +1,4 @@
-package com.dev.briefing.ui.theme
+package store.newsbriefing.app.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

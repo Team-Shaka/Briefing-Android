@@ -5,7 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import store.newsbriefing.app.buildlogic.config.Config
-import store.newsbriefing.app.buildlogic.extension.configureAndroidApplication
+import store.newsbriefing.app.buildlogic.extension.configureKotlinAndroid
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -23,7 +23,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     versionCode = Config.android.versionCode
                     versionName = Config.android.versionName
                 }
-                configureAndroidApplication(this)
+                configureKotlinAndroid(this)
 
                 packaging {
                     resources {
