@@ -23,6 +23,10 @@ internal fun Project.configureKotlinAndroid(
             minSdk = Config.android.minSdkVersion
         }
 
+        buildFeatures {
+            buildConfig = true
+        }
+
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_18
             targetCompatibility = JavaVersion.VERSION_18

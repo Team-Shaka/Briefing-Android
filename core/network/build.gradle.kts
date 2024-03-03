@@ -10,6 +10,8 @@ android {
 
 dependencies {
     api(projects.core.model)
+    api(projects.core.common)
 
     implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.gson)
 }
