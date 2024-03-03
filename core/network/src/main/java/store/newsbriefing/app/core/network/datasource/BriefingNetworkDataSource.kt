@@ -2,8 +2,8 @@ package store.newsbriefing.app.core.network.datasource
 
 import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.TimeOfDay
-import store.newsbriefing.app.core.network.model.briefing.NetworkBriefingArticle
-import store.newsbriefing.app.core.network.model.briefing.NetworkBriefingArticleSummary
+import store.newsbriefing.app.core.network.model.NetworkBriefingArticle
+import store.newsbriefing.app.core.network.model.NetworkBriefingArticleSummary
 import java.time.LocalDate
 
 interface BriefingNetworkDataSource {
