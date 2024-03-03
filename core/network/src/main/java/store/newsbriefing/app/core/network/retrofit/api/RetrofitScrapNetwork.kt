@@ -9,12 +9,10 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import store.newsbriefing.app.core.network.datasource.ScrapNetworkDataSource
+import store.newsbriefing.app.core.network.model.NetworkScrap
+import store.newsbriefing.app.core.network.model.NetworkScrapCreate
+import store.newsbriefing.app.core.network.model.NetworkScrapDelete
 import store.newsbriefing.app.core.network.model.RetrofitCommonResponse
-import store.newsbriefing.app.core.network.model.member.NetworkMemberDelete
-import store.newsbriefing.app.core.network.model.member.NetworkMemberToken
-import store.newsbriefing.app.core.network.model.scrap.NetworkScrap
-import store.newsbriefing.app.core.network.model.scrap.NetworkScrapCreate
-import store.newsbriefing.app.core.network.model.scrap.NetworkScrapDelete
 import javax.inject.Inject
 import javax.inject.Singleton
 

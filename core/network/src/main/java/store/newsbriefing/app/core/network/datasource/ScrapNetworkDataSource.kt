@@ -1,8 +1,9 @@
 package store.newsbriefing.app.core.network.datasource
 
-import store.newsbriefing.app.core.network.model.scrap.NetworkScrap
-import store.newsbriefing.app.core.network.model.scrap.NetworkScrapCreate
-import store.newsbriefing.app.core.network.model.scrap.NetworkScrapDelete
+import store.newsbriefing.app.core.network.model.NetworkScrap
+import store.newsbriefing.app.core.network.model.NetworkScrapCreate
+import store.newsbriefing.app.core.network.model.NetworkScrapDelete
+
 
 interface ScrapNetworkDataSource {
     suspend fun getScrap(memberId: Long): List<NetworkScrap>

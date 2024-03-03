@@ -9,8 +9,8 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import store.newsbriefing.app.core.network.datasource.MemberNetworkDataSource
-import store.newsbriefing.app.core.network.model.member.NetworkMemberDelete
-import store.newsbriefing.app.core.network.model.member.NetworkMemberToken
+import store.newsbriefing.app.core.network.model.NetworkMemberDelete
+import store.newsbriefing.app.core.network.model.NetworkMemberToken
 import store.newsbriefing.app.core.network.model.RetrofitCommonResponse
 import javax.inject.Inject
 import javax.inject.Singleton

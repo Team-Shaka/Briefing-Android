@@ -1,4 +1,4 @@
-package store.newsbriefing.app.core.network.model.briefing
+package store.newsbriefing.app.core.network.model
 
 import com.google.gson.annotations.SerializedName
 
@@ -17,4 +17,19 @@ data class NetworkBriefingArticle(
     @SerializedName("gptModel") val gptModel: String,
     @SerializedName("timeOfDay") val timeOfDay: String,
     @SerializedName("type") val type: String
+)
+
+data class NetworkBriefingArticleRelated(
+    @SerializedName("id") val id: Int,
+    @SerializedName("press") val press: String,
+    @SerializedName("title") val title: String,
+    @SerializedName("url") val url: String
+)
+
+data class NetworkBriefingArticleSummary(
+    @SerializedName("id") val id: Int,
+    @SerializedName("ranks") val ranks: Int,
+    @SerializedName("title") val title: String,
+    @SerializedName("subtitle") val subtitle: String,
+    @SerializedName("scrapCount") val scrapCount: Int
 )

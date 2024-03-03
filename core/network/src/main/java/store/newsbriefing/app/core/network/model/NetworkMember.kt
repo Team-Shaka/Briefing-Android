@@ -1,6 +1,10 @@
-package store.newsbriefing.app.core.network.model.member
+package store.newsbriefing.app.core.network.model
 
 import com.google.gson.annotations.SerializedName
+
+data class NetworkMemberDelete(
+    @SerializedName("quitAt")
+    val quitAt : String)
 
 data class NetworkMemberToken(
     @SerializedName("memberId")
@@ -9,5 +13,4 @@ data class NetworkMemberToken(
     val accessToken: String,
     @SerializedName("refreshToken")
     val refreshToken: String
-) {
-}
+)

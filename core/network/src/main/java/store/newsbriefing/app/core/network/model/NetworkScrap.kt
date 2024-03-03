@@ -1,4 +1,4 @@
-package store.newsbriefing.app.core.network.model.scrap
+package store.newsbriefing.app.core.network.model
 
 import com.google.gson.annotations.SerializedName
 
@@ -17,4 +17,22 @@ data class NetworkScrap(
     val gptModel: String,
     @SerializedName("timeOfDay")
     val timeOfDay: String,
+)
+
+data class NetworkScrapCreate(
+    @SerializedName("scrapId")
+    val scrapId: Int,
+    @SerializedName("memberId")
+    val memberId: Int,
+    @SerializedName("briefingId")
+    val briefingId: Int,
+    @SerializedName("createdAt")
+    val createdAt: String,
+)
+
+class NetworkScrapDelete(
+    @SerializedName("scrapId")
+    val scrapId: Int,
+    @SerializedName("deletedAt")
+    val deletedAt: String
 )

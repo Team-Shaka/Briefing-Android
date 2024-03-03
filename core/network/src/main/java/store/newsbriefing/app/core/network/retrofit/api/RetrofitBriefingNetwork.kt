@@ -10,11 +10,9 @@ import retrofit2.http.Query
 import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.TimeOfDay
 import store.newsbriefing.app.core.network.datasource.BriefingNetworkDataSource
+import store.newsbriefing.app.core.network.model.NetworkBriefingArticle
+import store.newsbriefing.app.core.network.model.NetworkBriefingArticleSummary
 import store.newsbriefing.app.core.network.model.RetrofitCommonResponse
-import store.newsbriefing.app.core.network.model.briefing.NetworkBriefingArticle
-import store.newsbriefing.app.core.network.model.briefing.NetworkBriefingArticleSummary
-import store.newsbriefing.app.core.network.model.member.NetworkMemberDelete
-import store.newsbriefing.app.core.network.model.member.NetworkMemberToken
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
