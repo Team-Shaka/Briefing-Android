@@ -3,11 +3,17 @@ package store.newsbriefing.app.feature.newsdetail
 import androidx.compose.runtime.Composable
 
 @Composable
-internal fun NewsDetailRoute() {
-    NewsDetailScreen()
+internal fun NewsDetailRoute(
+    showSnackbar: (String) -> Unit
+) {
+    NewsDetailScreen(
+        showSnackbar = showSnackbar
+    )
 }
 
 @Composable
-internal fun NewsDetailScreen() {
+internal fun NewsDetailScreen(
+    showSnackbar: (String) -> Unit
+) {
 
 }

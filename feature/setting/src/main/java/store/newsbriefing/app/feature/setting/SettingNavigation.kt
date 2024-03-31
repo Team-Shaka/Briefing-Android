@@ -10,10 +10,14 @@ fun NavController.navigateToSetting() {
     navigate(settingRoute)
 }
 
-fun NavGraphBuilder.settingScreen() {
+fun NavGraphBuilder.settingScreen(
+    showSnackbar: (String) -> Unit
+) {
     composable(
         route = settingRoute
     ) {
-        SettingRoute()
+        SettingRoute(
+            showSnackbar = showSnackbar
+        )
     }
 }

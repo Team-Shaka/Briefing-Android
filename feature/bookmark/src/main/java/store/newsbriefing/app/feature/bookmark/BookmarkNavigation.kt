@@ -10,10 +10,14 @@ fun NavController.navigateToBookmark() {
     navigate(bookmarkRoute)
 }
 
-fun NavGraphBuilder.bookmarkScreen() {
+fun NavGraphBuilder.bookmarkScreen(
+    showSnackbar: (String) -> Unit
+) {
     composable(
         route = bookmarkRoute
     ) {
-        BookmarkRoute()
+        BookmarkRoute(
+            showSnackbar = showSnackbar
+        )
     }
 }

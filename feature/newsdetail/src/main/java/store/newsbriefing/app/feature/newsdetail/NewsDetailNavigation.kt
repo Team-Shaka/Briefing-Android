@@ -10,10 +10,14 @@ fun NavController.navigateToNewsDetail() {
     navigate(NewsDetailRoute)
 }
 
-fun NavGraphBuilder.newsDetailScreen() {
+fun NavGraphBuilder.newsDetailScreen(
+    showSnackbar: (String) -> Unit
+) {
     composable(
         route = NewsDetailRoute
     ) {
-        NewsDetailRoute()
+        NewsDetailRoute(
+            showSnackbar = showSnackbar
+        )
     }
 }

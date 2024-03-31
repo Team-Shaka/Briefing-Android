@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.briefing.android.library)
     alias(libs.plugins.briefing.android.feature)
+    alias(libs.plugins.briefing.android.library.compose)
 }
 
 android {
