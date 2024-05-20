@@ -18,7 +18,9 @@ fun NavGraphBuilder.homeScreen(
         route = homeRoute
     ) {
         HomeRoute(
-            showSnackbar = showSnackbar
+            showSnackbar = showSnackbar,
+            navigateToBookmarkRoute = { },
+            navigateToSettingRoute = { }
         )
     }
 }
