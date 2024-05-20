@@ -1,7 +1,7 @@
 package store.newsbriefing.app.core.network.model
 
 import com.google.gson.annotations.SerializedName
-import store.newsbriefing.app.core.common.toZoneDateTime
+import store.newsbriefing.app.core.common.util.toZoneDateTime
 import store.newsbriefing.app.core.model.BriefingArticle
 import store.newsbriefing.app.core.model.BriefingArticleRelated
 import store.newsbriefing.app.core.model.BriefingArticleSummary
