@@ -1,11 +1,37 @@
 package store.newsbriefing.app.core.designsystem.theme
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+@Immutable
+data class BriefingColor(
+    val PrimaryBlue: Color,
+    val TextBlack: Color,
+    val TextGray: Color,
+    val TextRed: Color,
+    val SeperatorGray: Color,
+    val BackgroundWhite: Color,
+)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val localBriefingColor =
+    BriefingColor(
+        PrimaryBlue = Color(0xFF306DAB),
+        TextBlack = Color(0xFF000000),
+        TextGray = Color(0x997C7C7C),
+        TextRed = Color(0xFFFF0000),
+        SeperatorGray = Color(0xFFDADADA),
+        BackgroundWhite = Color(0xFFFFFFFF),
+    )
+
+
+val LocalBriefingColor = staticCompositionLocalOf {
+    BriefingColor(
+        PrimaryBlue = Color.Unspecified,
+        TextBlack = Color.Unspecified,
+        TextGray = Color.Unspecified,
+        TextRed = Color.Unspecified,
+        SeperatorGray = Color.Unspecified,
+        BackgroundWhite = Color.Unspecified,
+    )
+}
