@@ -1,4 +1,4 @@
-package store.newsbriefing.app.core.common
+package store.newsbriefing.app.core.common.util
 
 import java.time.Instant
 import java.time.ZoneId
