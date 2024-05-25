@@ -2,15 +2,21 @@ package store.newsbriefing.app.feature.auth.signIn
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -28,8 +34,52 @@ fun SignInRoute() {
 
 @Preview
 @Composable
-fun SignInScreen() {
+fun SignInScreenPreview() {
+    BriefingTheme {
+        SignInScreen()
+    }
+}
 
+@Composable
+fun SignInScreen() {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(color = BriefingTheme.colorScheme.PrimaryBlue),
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            SignInTitle(Modifier.align(Alignment.Center))
+        }
+
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(36.dp, 40.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            SignInWithGoogleButton(Modifier.fillMaxWidth())
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.5.dp)
+                    .background(Color(0xffb6b6b6))
+            )
+
+            Text(
+                modifier = Modifier.padding(24.dp),
+                text = "나중에 하기",
+                style = BriefingTheme.typography.ContextStyleBold.copy(color = BriefingTheme.colorScheme.BackgroundWhite)
+            )
+        }
+    }
 }
 
 @Preview
@@ -41,8 +91,8 @@ fun SignInTitlePreview() {
 }
 
 @Composable
-fun SignInTitle(modifier : Modifier = Modifier) {
-    Column(modifier) {
+fun SignInTitle(modifier: Modifier = Modifier) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = "Briefing", style = BriefingTheme.typography.TitleStyleBold.copy(
                 color = BriefingTheme.colorScheme.BackgroundWhite,
@@ -51,6 +101,7 @@ fun SignInTitle(modifier : Modifier = Modifier) {
             )
         )
         Spacer(Modifier.height(10.dp))
+
         Text(
             text = "Your Keyword Newskeeper",
             style = BriefingTheme.typography.SubtitleStyleRegular.copy(
