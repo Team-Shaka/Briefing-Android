@@ -1,13 +1,13 @@
 package store.newsbriefing.app.buildlogic.plugin
 
 import com.android.build.api.dsl.ApplicationExtension
-import com.google.android.libraries.mapsplatform.secrets_gradle_plugin.SecretsPluginExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import store.newsbriefing.app.buildlogic.config.Config
 import store.newsbriefing.app.buildlogic.extension.configureKotlinAndroid
 import store.newsbriefing.app.buildlogic.extension.configureSecret
+import store.newsbriefing.app.buildlogic.extension.configureSigningConfig
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -27,6 +27,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     versionName = Config.android.versionName
                 }
                 configureKotlinAndroid(this)
+                configureSigningConfig(this)
 
                 packaging {
                     resources {

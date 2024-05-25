@@ -7,6 +7,10 @@ plugins {
 
 android {
     namespace = Config.android.nameSpace
+
+    defaultConfig {
+        signingConfig = signingConfigs.getByName("config")
+    }
 }
 
 dependencies {
