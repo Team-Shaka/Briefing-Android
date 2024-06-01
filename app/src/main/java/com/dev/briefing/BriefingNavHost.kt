@@ -3,6 +3,8 @@ package com.dev.briefing
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import store.newsbriefing.app.feature.auth.signInRoute
+import store.newsbriefing.app.feature.auth.signInScreen
 import store.newsbriefing.app.feature.bookmark.bookmarkScreen
 import store.newsbriefing.app.feature.home.homeRoute
 import store.newsbriefing.app.feature.home.homeScreen
@@ -17,7 +19,7 @@ fun BriefingNavHost(
     NavHost(
         modifier = modifier,
         navController = appState.navController,
-        startDestination = homeRoute
+        startDestination = signInRoute
     ) {
         homeScreen(
             showSnackbar = appState::showSnackBar
@@ -31,5 +33,6 @@ fun BriefingNavHost(
         settingScreen(
             showSnackbar = appState::showSnackBar
         )
+        signInScreen()
     }
 }

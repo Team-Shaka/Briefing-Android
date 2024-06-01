@@ -1,4 +1,4 @@
-package store.newsbriefing.app.feature.auth
+package store.newsbriefing.app.core.datastore
 
 import org.junit.Test
 

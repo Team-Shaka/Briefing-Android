@@ -1,7 +1,8 @@
-package store.newsbriefing.app.core.data.repository
+package store.newsbriefing.app.core.data.repository.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import store.newsbriefing.app.core.data.repository.BriefingRepository
 import store.newsbriefing.app.core.model.BriefingArticle
 import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.BriefingArticleSummary

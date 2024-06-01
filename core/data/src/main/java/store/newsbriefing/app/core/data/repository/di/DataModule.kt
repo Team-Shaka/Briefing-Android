@@ -5,9 +5,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import store.newsbriefing.app.core.data.repository.BriefingRepository
-import store.newsbriefing.app.core.data.repository.DefaultBriefingRepository
-import store.newsbriefing.app.core.data.repository.DefaultMemberRepository
-import store.newsbriefing.app.core.data.repository.DefaultScrapRepository
+import store.newsbriefing.app.core.data.repository.impl.DefaultBriefingRepository
+import store.newsbriefing.app.core.data.repository.impl.DefaultMemberRepository
+import store.newsbriefing.app.core.data.repository.impl.DefaultScrapRepository
 import store.newsbriefing.app.core.data.repository.MemberRepository
 import store.newsbriefing.app.core.data.repository.ScrapRepository
 

@@ -3,6 +3,7 @@ package store.newsbriefing.app.feature.auth.signIn
 import android.view.RoundedCorner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,13 +33,14 @@ fun SignInWithGoogleButtonPreview() {
 }
 
 @Composable
-fun SignInWithGoogleButton(modifier: Modifier = Modifier) {
+fun SignInWithGoogleButton(modifier: Modifier = Modifier, onClick : () -> Unit = {}) {
     Row(
         modifier = modifier
             .background(
                 color = BriefingTheme.colorScheme.BackgroundWhite,
                 shape = RoundedCornerShape(25.dp)
             )
+            .clickable { onClick() }
             .padding(24.dp, 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center

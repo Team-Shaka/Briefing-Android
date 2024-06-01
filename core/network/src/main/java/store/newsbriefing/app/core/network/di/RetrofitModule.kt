@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import store.newsbriefing.app.core.network.BuildConfig
+import store.newsbriefing.app.core.common.BuildConfig
 import javax.inject.Singleton
 
 @Module

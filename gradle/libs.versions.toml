@@ -1,26 +1,33 @@
 [versions]
-androidTools = "31.2.0"
+androidTools = "31.4.1"
 agp = "8.2.2"
+credentialsPlayServicesAuth = "1.3.0-beta01"
 kotlin = "1.9.21"
-core-ktx = "1.12.0"
+core-ktx = "1.13.1"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-lifecycle-runtime-ktx = "2.7.0"
-activity-compose = "1.8.2"
-hilt = "2.50"
-compose-bom = "2024.02.00"
+lifecycle-runtime-ktx = "2.8.1"
+activity-compose = "1.9.0"
+hilt = "2.51"
+compose-bom = "2024.05.00"
 androidxComposeCompiler = "1.5.7"
-androidxHiltNavigationCompose = "1.0.0"
-androidxLifecycle = "2.6.2"
+androidxHiltNavigationCompose = "1.2.0"
+androidxLifecycle = "2.8.1"
 ksp = "1.9.21-1.0.16"
-androidxAppCompat = "1.6.1"
-androidxActivity = "1.8.2"
+androidxAppCompat = "1.7.0"
+androidxActivity = "1.9.0"
 retrofit = "2.9.0"
 material = "1.11.0"
 secretsGradlePlugin = "2.0.1"
+googleid = "1.1.0"
+datastore = "1.1.1"
 
 [libraries]
+googleid = {module ="com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid"}
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentialsPlayServicesAuth" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
+
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -67,6 +74,8 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref= "datastore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

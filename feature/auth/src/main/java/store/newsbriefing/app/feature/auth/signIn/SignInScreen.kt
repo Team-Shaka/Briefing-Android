@@ -16,20 +16,51 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import kotlinx.coroutines.launch
 import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
+import store.newsbriefing.app.core.ui.BuildConfig
 import store.newsbriefing.app.feature.auth.R
+import java.util.UUID
+private fun createGoogleIdOption(): GetGoogleIdOption {
+    return GetGoogleIdOption.Builder()
+        .setFilterByAuthorizedAccounts(true)
+        .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
+        .setAutoSelectEnabled(true)
+        .setNonce(generateNonce())
+        .build()
+}
 
 @Composable
-fun SignInRoute() {
-    SignInScreen()
+fun SignInRoute(signInViewModel: SignInViewModel = hiltViewModel()) {
+    val context = LocalContext.current
+    val composeCoroutine = rememberCoroutineScope()
+
+    SignInScreen {
+        val googleIdOption = createGoogleIdOption()
+
+        val request: GetCredentialRequest = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        composeCoroutine.launch {
+            val req = CredentialManager.create(context).getCredential(context, request)
+            signInViewModel.handleSignIn(req)
+        }
+    }
 }
 
 @Preview
@@ -40,8 +71,14 @@ fun SignInScreenPreview() {
     }
 }
 
+private fun generateNonce(): String {
+    // Nonce 생성 로직
+    return UUID.randomUUID().toString()
+}
+
 @Composable
-fun SignInScreen() {
+fun SignInScreen(onGoogleSignInRequest: () -> Unit = {}) {
+
     Column(
         Modifier
             .fillMaxSize()
@@ -62,7 +99,7 @@ fun SignInScreen() {
                 .padding(36.dp, 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SignInWithGoogleButton(Modifier.fillMaxWidth())
+            SignInWithGoogleButton(Modifier.fillMaxWidth(), onGoogleSignInRequest)
 
             Spacer(modifier = Modifier.height(40.dp))
 

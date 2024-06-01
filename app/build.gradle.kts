@@ -2,6 +2,7 @@ import store.newsbriefing.app.buildlogic.config.Config
 
 plugins {
     alias(libs.plugins.briefing.android.application)
+    alias(libs.plugins.briefing.android.hilt)
     alias(libs.plugins.briefing.android.application.compose)
 }
 
@@ -20,6 +21,7 @@ dependencies {
     implementation(projects.feature.bookmark)
     implementation(projects.feature.newsdetail)
     implementation(projects.feature.setting)
+    implementation(projects.feature.auth)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
@@ -27,4 +29,5 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.navigation)
 }

@@ -1,14 +1,16 @@
-package store.newsbriefing.app.core.data.repository
+package store.newsbriefing.app.core.data.repository.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import store.newsbriefing.app.core.data.repository.ScrapRepository
 import store.newsbriefing.app.core.model.Scrap
 import store.newsbriefing.app.core.model.ScrapCreateResult
 import store.newsbriefing.app.core.model.ScrapDeleteResult
 import store.newsbriefing.app.core.network.datasource.ScrapNetworkDataSource
 import store.newsbriefing.app.core.network.model.asExternalModel
 
-internal class DefaultScrapRepository(private val scrapNetworkDataSource: ScrapNetworkDataSource) : ScrapRepository {
+internal class DefaultScrapRepository(private val scrapNetworkDataSource: ScrapNetworkDataSource) :
+    ScrapRepository {
     override fun getScrap(memberId: Long): Flow<List<Scrap>> = flow {
         val scraps = scrapNetworkDataSource.getScrap(memberId).map { it.asExternalModel() }
         emit(scraps)
