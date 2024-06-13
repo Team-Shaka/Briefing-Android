@@ -1,15 +1,19 @@
 package store.newsbriefing.app.core.designsystem.theme
 
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import store.newsbriefing.app.core.designsystem.R
+
+val Pretendard = FontFamily(
+    Font(R.font.pretendardsemibold, FontWeight.SemiBold),
+    Font(R.font.pretendardmedium, FontWeight.Medium),
+    Font(R.font.pretendardregular, FontWeight.Normal),
+)
 
 val ProductSans = FontFamily(
     Font(R.font.productsansbold, FontWeight.Bold),
