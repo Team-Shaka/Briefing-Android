@@ -66,8 +66,6 @@ internal fun BookmarkScreen(
 
         }
 
-
-
         repeat(3) {
             BookmarkSection(
                 date = "2023.11.01(수) 오후",
@@ -253,7 +251,7 @@ private fun BookmarkItem(
             )
 
             Text(
-                text = "${item.gptModel}로 생서됨",
+                text = "${item.gptModel}로 생성됨",
                 style = TextStyle(
                     fontFamily = Pretendard,
                     fontWeight = FontWeight.Normal,
