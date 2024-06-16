@@ -6,7 +6,6 @@ import store.newsbriefing.app.core.data.repository.ScrapRepository
 import store.newsbriefing.app.core.data.repository.model.asExternalModel
 import store.newsbriefing.app.core.model.Scrap
 import store.newsbriefing.app.core.network.datasource.ScrapNetworkDataSource
-import store.newsbriefing.app.core.network.model.asExternalModel
 
 internal class DefaultScrapRepository(private val scrapNetworkDataSource: ScrapNetworkDataSource) :
     ScrapRepository {
