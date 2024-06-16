@@ -12,6 +12,9 @@ dependencies {
     api(projects.core.model)
     api(projects.core.common)
     api(projects.core.designsystem)
+    api(projects.core.domain)
+
+    implementation(projects.core.data)
 
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)

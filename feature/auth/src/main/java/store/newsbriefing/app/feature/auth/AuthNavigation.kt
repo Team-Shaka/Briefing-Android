@@ -11,10 +11,10 @@ fun NavController.navigateToSignIn() {
     navigate(signInRoute)
 }
 
-fun NavGraphBuilder.signInScreen() {
+fun NavGraphBuilder.signInScreen(showSnackBar : (String) -> Unit, navigateToHome : () -> Unit) {
     composable(
         route = signInRoute
     ) {
-        SignInRoute()
+        SignInRoute(showSnackBar, navigateToHome)
     }
 }

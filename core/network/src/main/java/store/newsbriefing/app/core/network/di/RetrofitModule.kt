@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import store.newsbriefing.app.core.common.BuildConfig
+import store.newsbriefing.app.core.network.util.AuthInterceptor
 import javax.inject.Singleton
 
 @Module
@@ -26,8 +27,10 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder().build()
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .build()
     }
 
     @Provides

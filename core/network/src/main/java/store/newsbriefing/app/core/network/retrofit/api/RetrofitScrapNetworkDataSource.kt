@@ -7,7 +7,6 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 import store.newsbriefing.app.core.network.datasource.ScrapNetworkDataSource
 import store.newsbriefing.app.core.network.model.NetworkScrap
 import store.newsbriefing.app.core.network.model.RetrofitCommonResponse
@@ -58,7 +57,7 @@ private interface RetrofitScrapApi {
 }
 
 @Singleton
-internal class RetrofitScrapNetwork @Inject constructor(
+internal class RetrofitScrapNetworkDataSource @Inject constructor(
     private val retrofit: Retrofit
 ) : ScrapNetworkDataSource {
     private val api: RetrofitScrapApi by lazy {

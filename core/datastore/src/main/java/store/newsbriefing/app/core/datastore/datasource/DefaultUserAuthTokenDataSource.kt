@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 import store.newsbriefing.app.core.datastore.model.UserAuthTokenPreferences
 import javax.inject.Inject
 
-class DefaultUserAuthTokenDataSource @Inject constructor(val datastore: DataStore<Preferences>) :
+internal class DefaultUserAuthTokenDataSource @Inject constructor(private val datastore: DataStore<Preferences>) :
     UserAuthTokenDataSource {
 
     private object PreferencesKeys {
@@ -36,6 +36,12 @@ class DefaultUserAuthTokenDataSource @Inject constructor(val datastore: DataStor
         }.map { preferences ->
             mapUserAuthToken(preferences) ?: throw MissingAuthTokenException()
         }
+
+    override suspend fun clear() {
+        datastore.edit { preferences ->
+            preferences.clear()
+        }
+    }
 
     override suspend fun saveUserAuthToken(memberId : Long, accessToken: String, refreshToken: String) {
         datastore.edit { preferences ->

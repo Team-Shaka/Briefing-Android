@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,12 +31,15 @@ import androidx.compose.ui.unit.sp
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
 import store.newsbriefing.app.core.ui.BuildConfig
 import store.newsbriefing.app.feature.auth.R
 import java.util.UUID
+import kotlin.math.sign
 
 private fun createGoogleIdOption(): GetGoogleIdOption {
     return GetGoogleIdOption.Builder()
@@ -46,9 +51,22 @@ private fun createGoogleIdOption(): GetGoogleIdOption {
 }
 
 @Composable
-fun SignInRoute(signInViewModel: SignInViewModel = hiltViewModel()) {
+fun SignInRoute(showSnackBar : (String) -> Unit, navigateToMain : () -> Unit, signInViewModel: SignInViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val composeCoroutine = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        signInViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is SignInEvent.NavigateToMain -> {
+                    navigateToMain()
+                }
+                is SignInEvent.ErrorOccurred -> {
+                    showSnackBar(event.message)
+                }
+            }
+        }
+    }
 
     SignInScreen {
         val googleIdOption = createGoogleIdOption()

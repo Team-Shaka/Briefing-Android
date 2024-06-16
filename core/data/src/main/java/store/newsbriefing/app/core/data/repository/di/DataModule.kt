@@ -9,7 +9,9 @@ import store.newsbriefing.app.core.data.repository.impl.DefaultBriefingRepositor
 import store.newsbriefing.app.core.data.repository.impl.DefaultMemberRepository
 import store.newsbriefing.app.core.data.repository.impl.DefaultScrapRepository
 import store.newsbriefing.app.core.data.repository.MemberRepository
+import store.newsbriefing.app.core.data.repository.MemberTokenRepository
 import store.newsbriefing.app.core.data.repository.ScrapRepository
+import store.newsbriefing.app.core.data.repository.impl.DefaultMemberTokenRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -28,4 +30,9 @@ abstract class DataModule {
     internal abstract fun bindScrapRepository(
         repository: DefaultScrapRepository
     ): ScrapRepository
+
+    @Binds
+    internal abstract fun bindMemberTokenRepository(
+        repository: DefaultMemberTokenRepository
+    ): MemberTokenRepository
 }

@@ -13,21 +13,30 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import store.newsbriefing.app.core.common.util.BriefingLogger
 import store.newsbriefing.app.core.common.util.EventFlow
 import store.newsbriefing.app.core.common.util.MutableEventFlow
 import store.newsbriefing.app.core.common.util.asEventFlow
+import store.newsbriefing.app.core.data.repository.MemberRepository
+import store.newsbriefing.app.core.domain.SignInWithSocialProviderUseCase
+import store.newsbriefing.app.core.model.MemberToken
+import store.newsbriefing.app.core.model.SocialProvider
 import store.newsbriefing.app.core.ui.BuildConfig
 import java.util.UUID
 import javax.inject.Inject
 
 sealed class SignInEvent {
-    object NavigateToMain : SignInEvent()
+    data object NavigateToMain : SignInEvent()
     data class ErrorOccurred(val message: String) : SignInEvent()
 }
 
 @HiltViewModel
-class SignInViewModel @Inject constructor() : ViewModel() {
+class SignInViewModel @Inject constructor(
+    private val memberRepository: MemberRepository,
+    private val signInWithSocialProviderUseCase: SignInWithSocialProviderUseCase
+) : ViewModel() {
     val eventFlow: EventFlow<SignInEvent>
         get() = _eventFlow.asEventFlow()
     private val _eventFlow: MutableEventFlow<SignInEvent> = MutableEventFlow()
@@ -40,9 +49,14 @@ class SignInViewModel @Inject constructor() : ViewModel() {
                         val googleIdTokenCredential =
                             GoogleIdTokenCredential.createFrom(credential.data)
                         val googleIdToken = googleIdTokenCredential.idToken
-                        Log.d("SignInViewModel-c", googleIdTokenCredential.idToken)
+
+                        signInWithSocialProviderUseCase(SocialProvider.GOOGLE, googleIdToken)
+                        _eventFlow.emit(SignInEvent.NavigateToMain)
                     } catch (e: GoogleIdTokenParsingException) {
                         _eventFlow.emit(SignInEvent.ErrorOccurred("Failed to parse Google ID token"))
+                    } catch (e: Exception) {
+                        BriefingLogger.e("Failed to sign in with Google ID token: ${e.message}")
+                        _eventFlow.emit(SignInEvent.ErrorOccurred("Failed to sign in with Google ID token"))
                     }
                 } else {
                     _eventFlow.emit(SignInEvent.ErrorOccurred("Not supported credential type"))

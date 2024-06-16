@@ -6,8 +6,9 @@ import kotlinx.coroutines.flow.map
 import store.newsbriefing.app.core.data.repository.MemberTokenRepository
 import store.newsbriefing.app.core.datastore.datasource.UserAuthTokenDataSource
 import store.newsbriefing.app.core.model.MemberToken
+import javax.inject.Inject
 
-class DefaultMemberTokenRepository(private val userAuthTokenDataSource: UserAuthTokenDataSource) :
+class DefaultMemberTokenRepository @Inject constructor(private val userAuthTokenDataSource: UserAuthTokenDataSource) :
     MemberTokenRepository {
     override fun getMemberToken(): Flow<MemberToken> {
         return userAuthTokenDataSource.getUserAuthToken().map {

@@ -7,25 +7,25 @@ import dagger.hilt.components.SingletonComponent
 import store.newsbriefing.app.core.network.datasource.BriefingNetworkDataSource
 import store.newsbriefing.app.core.network.datasource.MemberNetworkDataSource
 import store.newsbriefing.app.core.network.datasource.ScrapNetworkDataSource
-import store.newsbriefing.app.core.network.retrofit.api.RetrofitBriefingNetwork
-import store.newsbriefing.app.core.network.retrofit.api.RetrofitMemberNetwork
-import store.newsbriefing.app.core.network.retrofit.api.RetrofitScrapNetwork
+import store.newsbriefing.app.core.network.retrofit.api.RetrofitBriefingNetworkDataSource
+import store.newsbriefing.app.core.network.retrofit.api.RetrofitMemberNetworkDataSource
+import store.newsbriefing.app.core.network.retrofit.api.RetrofitScrapNetworkDataSource
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal interface NetworkModule {
     @Binds
     fun bindBriefingNetworkDataSource(
-        retrofitBriefingNetwork: RetrofitBriefingNetwork
+        retrofitBriefingNetworkDataSource: RetrofitBriefingNetworkDataSource
     ): BriefingNetworkDataSource
 
     @Binds
     fun bindMemberNetworkDataSource(
-        retrofitMemberNetwork: RetrofitMemberNetwork
+        retrofitMemberNetworkDataSource: RetrofitMemberNetworkDataSource
     ): MemberNetworkDataSource
 
     @Binds
     fun bindScrapNetworkDataSource(
-        retrofitScrapNetwork: RetrofitScrapNetwork
+        retrofitScrapNetworkDataSource: RetrofitScrapNetworkDataSource
     ): ScrapNetworkDataSource
 }

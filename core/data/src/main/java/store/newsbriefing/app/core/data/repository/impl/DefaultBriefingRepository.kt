@@ -3,12 +3,12 @@ package store.newsbriefing.app.core.data.repository.impl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import store.newsbriefing.app.core.data.repository.BriefingRepository
+import store.newsbriefing.app.core.data.repository.model.asExternalModel
 import store.newsbriefing.app.core.model.BriefingArticle
 import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.BriefingArticleSummary
 import store.newsbriefing.app.core.model.TimeOfDay
 import store.newsbriefing.app.core.network.datasource.BriefingNetworkDataSource
-import store.newsbriefing.app.core.network.model.asExternalModel
 import java.time.LocalDate
 
 internal class DefaultBriefingRepository(

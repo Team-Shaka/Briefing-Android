@@ -1,10 +1,7 @@
 package store.newsbriefing.app.core.network.retrofit.api
 
 import retrofit2.Retrofit
-import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import store.newsbriefing.app.core.model.BriefingArticleCategory
@@ -31,7 +28,7 @@ private interface RetrofitBriefingApi {
 }
 
 @Singleton
-internal class RetrofitBriefingNetwork @Inject constructor(
+internal class RetrofitBriefingNetworkDataSource @Inject constructor(
     private val retrofit: Retrofit
 ) : BriefingNetworkDataSource {
     private val api: RetrofitBriefingApi by lazy {

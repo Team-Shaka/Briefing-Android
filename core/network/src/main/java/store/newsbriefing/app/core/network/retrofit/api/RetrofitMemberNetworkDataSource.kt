@@ -7,6 +7,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import store.newsbriefing.app.core.model.SocialProvider
 import store.newsbriefing.app.core.network.datasource.MemberNetworkDataSource
 import store.newsbriefing.app.core.network.model.NetworkMemberDeleteResponse
 import store.newsbriefing.app.core.network.model.NetworkMemberToken
@@ -26,7 +27,7 @@ private data class PostTokenWithSocialProviderRequest(
 private interface RetrofitMemberApi {
     @POST("members/auth/{provider}")
     suspend fun postTokenWithSocialProvider(
-        @Query("provider") provider: String,
+        @Path("provider") provider: String,
         @Body request: PostTokenWithSocialProviderRequest
     ): RetrofitCommonResponse<NetworkMemberToken>
 
@@ -42,7 +43,7 @@ private interface RetrofitMemberApi {
 }
 
 @Singleton
-internal class RetrofitMemberNetwork @Inject constructor(
+internal class RetrofitMemberNetworkDataSource @Inject constructor(
     private val retrofit: Retrofit
 ) : MemberNetworkDataSource {
     private val api: RetrofitMemberApi by lazy {
@@ -57,10 +58,10 @@ internal class RetrofitMemberNetwork @Inject constructor(
     }
 
     override suspend fun getTokenWithSocialProvider(
-        provider: String,
+        provider: SocialProvider,
         identityToken: String
     ): NetworkMemberToken {
-        val response = api.postTokenWithSocialProvider(provider, PostTokenWithSocialProviderRequest(identityToken))
+        val response = api.postTokenWithSocialProvider(provider.value, PostTokenWithSocialProviderRequest(identityToken))
         return response.result
     }
 

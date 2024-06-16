@@ -5,5 +5,6 @@ import store.newsbriefing.app.core.datastore.model.UserAuthTokenPreferences
 
 interface UserAuthTokenDataSource {
     fun getUserAuthToken(): Flow<UserAuthTokenPreferences>
+    suspend fun clear()
     suspend fun saveUserAuthToken(memberId : Long, accessToken: String, refreshToken: String)
 }

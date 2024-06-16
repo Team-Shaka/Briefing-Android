@@ -13,5 +13,5 @@ dependencies {
     api(projects.core.common)
     api(projects.core.datastore)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    implementation(libs.kotlinx.coroutines.android)
 }
