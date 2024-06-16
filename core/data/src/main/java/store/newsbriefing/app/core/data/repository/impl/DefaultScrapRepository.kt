@@ -4,8 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import store.newsbriefing.app.core.data.repository.ScrapRepository
 import store.newsbriefing.app.core.model.Scrap
-import store.newsbriefing.app.core.model.ScrapCreateResult
-import store.newsbriefing.app.core.model.ScrapDeleteResult
 import store.newsbriefing.app.core.network.datasource.ScrapNetworkDataSource
 import store.newsbriefing.app.core.network.model.asExternalModel
 

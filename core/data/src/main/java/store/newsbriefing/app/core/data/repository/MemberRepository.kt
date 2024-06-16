@@ -1,7 +1,6 @@
 package store.newsbriefing.app.core.data.repository
 
 import kotlinx.coroutines.flow.Flow
-import store.newsbriefing.app.core.model.MemberDeleteResult
 import store.newsbriefing.app.core.model.MemberToken
 
 interface MemberRepository {

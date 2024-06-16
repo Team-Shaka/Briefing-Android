@@ -1,19 +1,12 @@
 package store.newsbriefing.app.core.network.model
 
 import com.google.gson.annotations.SerializedName
-import store.newsbriefing.app.core.common.util.toZoneDateTime
-import store.newsbriefing.app.core.model.MemberDeleteResult
 import store.newsbriefing.app.core.model.MemberToken
 
-data class NetworkMemberDelete(
+internal data class NetworkMemberDeleteResponse(
     @SerializedName("quitAt")
-    val quitAt : String)
-
-fun NetworkMemberDelete.asExternalModel() : MemberDeleteResult {
-    return MemberDeleteResult(
-        quitAt = quitAt.toZoneDateTime()
-    )
-}
+    val quitAt: String
+)
 
 data class NetworkMemberToken(
     @SerializedName("memberId")
@@ -23,11 +16,3 @@ data class NetworkMemberToken(
     @SerializedName("refreshToken")
     val refreshToken: String
 )
-
-fun NetworkMemberToken.asExternalModel() : MemberToken {
-    return MemberToken(
-        memberId = memberId,
-        accessToken = accessToken,
-        refreshToken = refreshToken
-    )
-}

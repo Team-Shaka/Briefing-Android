@@ -35,6 +35,7 @@ import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
 import store.newsbriefing.app.core.ui.BuildConfig
 import store.newsbriefing.app.feature.auth.R
 import java.util.UUID
+
 private fun createGoogleIdOption(): GetGoogleIdOption {
     return GetGoogleIdOption.Builder()
         .setFilterByAuthorizedAccounts(true)
@@ -57,8 +58,12 @@ fun SignInRoute(signInViewModel: SignInViewModel = hiltViewModel()) {
             .build()
 
         composeCoroutine.launch {
-            val req = CredentialManager.create(context).getCredential(context, request)
-            signInViewModel.handleSignIn(req)
+            try {
+                val req = CredentialManager.create(context).getCredential(context, request)
+                signInViewModel.handleSignIn(req)
+            } catch (e: Exception) {
+                // Handle error
+            }
         }
     }
 }

@@ -23,40 +23,12 @@ data class NetworkBriefingArticle(
     @SerializedName("type") val type: String
 )
 
-fun NetworkBriefingArticle.asExternalModel(): BriefingArticle {
-    return BriefingArticle(
-        id = id,
-        ranks = ranks,
-        title = title,
-        subtitle = subtitle,
-        content = content,
-        date = date.toZoneDateTime(),
-        articles = articles.map { it.asExternalModel() },
-        isScrap = isScrap,
-        isBriefingOpen = isBriefingOpen,
-        isWarning = isWarning,
-        scrapCount = scrapCount,
-        gptModel = gptModel,
-        timeOfDay = timeOfDay,
-        type = type
-    )
-}
-
 data class NetworkBriefingArticleRelated(
     @SerializedName("id") val id: Int,
     @SerializedName("press") val press: String,
     @SerializedName("title") val title: String,
     @SerializedName("url") val url: String
 )
-
-fun NetworkBriefingArticleRelated.asExternalModel(): BriefingArticleRelated {
-    return BriefingArticleRelated(
-        id = id,
-        press = press,
-        title = title,
-        url = url
-    )
-}
 
 data class NetworkBriefingArticleSummary(
     @SerializedName("id") val id: Int,
@@ -65,13 +37,3 @@ data class NetworkBriefingArticleSummary(
     @SerializedName("subtitle") val subtitle: String,
     @SerializedName("scrapCount") val scrapCount: Int
 )
-
-fun NetworkBriefingArticleSummary.asExternalModel(): BriefingArticleSummary {
-    return BriefingArticleSummary(
-        id = id,
-        ranks = ranks,
-        title = title,
-        subtitle = subtitle,
-        scrapCount = scrapCount
-    )
-}

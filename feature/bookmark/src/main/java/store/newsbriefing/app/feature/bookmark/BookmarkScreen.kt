@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
 import store.newsbriefing.app.core.designsystem.theme.Pretendard
 import store.newsbriefing.app.core.model.Scrap
+import java.time.ZonedDateTime
 
 @Composable
 internal fun BookmarkRoute(
@@ -77,7 +78,7 @@ internal fun BookmarkScreen(
                         ranks = 1,
                         title = "제목",
                         subtitle = "부제목",
-                        date = "2023-1-1",
+                        date = ZonedDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone),
                         timeOfDay = "오전 10:00",
                         gptModel = "GPT-3",
                     ),
@@ -86,7 +87,7 @@ internal fun BookmarkScreen(
                         ranks = 2,
                         title = "제목",
                         subtitle = "부제목",
-                        date = "2023-1-1",
+                        date = ZonedDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone),
                         timeOfDay = "오전 10:00",
                         gptModel = "GPT-3",
                     ),
@@ -95,7 +96,7 @@ internal fun BookmarkScreen(
                         ranks = 3,
                         title = "제목",
                         subtitle = "부제목",
-                        date = "2023-1-1",
+                        date = ZonedDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone),
                         timeOfDay = "오전 10:00",
                         gptModel = "GPT-3",
                     )

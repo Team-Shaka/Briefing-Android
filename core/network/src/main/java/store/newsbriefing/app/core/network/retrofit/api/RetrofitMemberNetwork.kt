@@ -4,12 +4,11 @@ import com.google.gson.annotations.SerializedName
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import store.newsbriefing.app.core.network.datasource.MemberNetworkDataSource
-import store.newsbriefing.app.core.network.model.NetworkMemberDelete
+import store.newsbriefing.app.core.network.model.NetworkMemberDeleteResponse
 import store.newsbriefing.app.core.network.model.NetworkMemberToken
 import store.newsbriefing.app.core.network.model.RetrofitCommonResponse
 import javax.inject.Inject
@@ -39,7 +38,7 @@ private interface RetrofitMemberApi {
     @DELETE("members/{memberId}")
     suspend fun deleteMember(
         @Path("memberId") memberId: Long
-    ): RetrofitCommonResponse<NetworkMemberDelete>
+    ): RetrofitCommonResponse<NetworkMemberDeleteResponse>
 }
 
 @Singleton
@@ -50,9 +49,11 @@ internal class RetrofitMemberNetwork @Inject constructor(
         retrofit.create(RetrofitMemberApi::class.java)
     }
 
-    override suspend fun deleteMember(memberId: Long): NetworkMemberDelete {
+    override suspend fun deleteMember(memberId: Long) {
         val response = api.deleteMember(memberId)
-        return response.result
+        if (!response.isSuccess) {
+            throw Exception(response.message)
+        }
     }
 
     override suspend fun getTokenWithSocialProvider(
