@@ -5,7 +5,7 @@ import store.newsbriefing.app.core.model.MemberToken
 
 interface MemberRepository {
 
-    suspend fun deleteMember(memberId: Long): Flow<MemberDeleteResult>
+    suspend fun deleteMember(memberId: Long)
     suspend fun getTokenWithSocialProvider(provider: String, identityToken: String): Flow<MemberToken>
     suspend fun getRefreshedAccessToken(refreshToken: String): Flow<MemberToken>
 }

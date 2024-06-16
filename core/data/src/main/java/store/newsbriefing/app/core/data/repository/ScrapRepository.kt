@@ -5,6 +5,6 @@ import store.newsbriefing.app.core.model.Scrap
 
 interface ScrapRepository {
     fun getScrap(memberId: Long): Flow<List<Scrap>>
-    fun setScrap(memberId: Long, articleId: Long): Flow<ScrapCreateResult>
-    fun unScrap(memberId: Long, articleId: Long): Flow<ScrapDeleteResult>
+    suspend fun setScrap(memberId: Long, articleId: Long)
+    suspend fun unScrap(memberId: Long, articleId: Long)
 }
