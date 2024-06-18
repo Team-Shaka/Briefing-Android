@@ -9,7 +9,6 @@ import okhttp3.Response
 import store.newsbriefing.app.core.common.util.BriefingLogger
 import store.newsbriefing.app.core.datastore.datasource.UserAuthTokenDataSource
 import store.newsbriefing.app.core.network.datasource.MemberNetworkDataSource
-import java.util.logging.Logger
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
@@ -35,22 +34,22 @@ class AuthInterceptor @Inject constructor(
                 }.build()
         )
 
-        if (response.code() == 200 || response.code() == 201) {
+        if (response.code == 200 || response.code == 201) {
             BriefingLogger.d(
-                "response code : ${response.code()} ${
+                "response code : ${response.code} ${
                     response.peekBody(2048).string()
                 }"
             )
         } else {
             BriefingLogger.e(
-                "response code : ${response.code()} ${
+                "response code : ${response.code} ${
                     response.peekBody(2048).string()
                 }"
             )
         }
 
 
-        if (response.code() == 401 && token != null) {
+        if (response.code == 401 && token != null) {
             val responseBodyString = response.peekBody(2048).string()
 
             val jsonObject = gson.fromJson(responseBodyString, JsonObject::class.java)
