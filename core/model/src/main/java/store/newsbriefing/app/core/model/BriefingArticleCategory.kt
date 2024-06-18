@@ -1,4 +1,5 @@
 package store.newsbriefing.app.core.model
+
 enum class BriefingArticleCategory(val typeId: String) {
     KOREA("KOREA"),
     GLOBAL("GLOBAL"),

@@ -14,101 +14,137 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
+import store.newsbriefing.app.core.designsystem.LoadingDialog
 import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
 import store.newsbriefing.app.core.designsystem.theme.Pretendard
+import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.BriefingArticleRelated
+import store.newsbriefing.app.core.model.TimeOfDay
 
 @Composable
 internal fun NewsDetailRoute(
-    showSnackbar: (String) -> Unit
+    showSnackbar: (String) -> Unit,
+    navigateUp: () -> Unit,
+    newsDetailViewModel: NewsDetailViewModel = hiltViewModel()
 ) {
-    NewsDetailScreen(
-        showSnackbar = showSnackbar
+    val uiState by newsDetailViewModel.uiState.collectAsStateWithLifecycle(
+        lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
     )
-}
 
-@Preview
-@Composable
-fun NewsDetailScreenPreview() {
-    BriefingTheme {
-        NewsDetailScreen(
-            showSnackbar = {}
-        )
+    LaunchedEffect(Unit) {
+        newsDetailViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is NewsDetailEvent.ErrorOccurred -> {
+                    showSnackbar(event.message)
+                }
+            }
+        }
     }
+
+    NewsDetailScreen(
+        uiState = uiState,
+        setScrap = newsDetailViewModel::setScrap,
+        unScrap = newsDetailViewModel::unScrap,
+        showSnackbar = showSnackbar,
+        navigateUp = navigateUp
+    )
 }
 
 @Composable
 internal fun NewsDetailScreen(
-    showSnackbar: (String) -> Unit
+    uiState: NewsDetailUiState,
+    setScrap: (Long) -> Unit,
+    unScrap: (Long) -> Unit,
+    showSnackbar: (String) -> Unit,
+    navigateUp: () -> Unit
 ) {
     val context = LocalContext.current
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BriefingTheme.colorScheme.BackgroundWhite)
-    ) {
-        TopBar(onBack = {  }) {
-            
+    when (uiState.article) {
+        is BriefingArticleUiState.Loading -> {
+            LoadingDialog()
         }
-
-        NewsDetailHeader(
-            title = "배터리 혁명",
-            category = "사회 1"
-        )
-
-        NewsSummarySection(
-            title = "2차 전지 혁명으로 인한 놀라운 발견과 문제 해결",
-            content = "배터리 혁명은 현대 산업과 일상 생활에 혁명적인 변화를 가져왔다. 전기 자동차 및 이동식 장치들은 더 큰 용량과 효율성을 가진 배터리로 긴 주행거리와 높은 성능을 실현하였다. 또한 재생 에너지 저장 시스템으로 활용되어 전력 그리드 안정성을 증진시키고 친환경 에너지 전환을 촉진하고 있다. 연구의 진보로 배터리 수명과 충전 시간이 개선되며, 이는 모바일 기기부터 심지어 대규모 에너지 저장까지 다양한 분야에서 혁신을 이뤄내고 있다",
-        )
-
-        Spacer(modifier = Modifier.height(65.dp))
-        
-        ScrapButton(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            isBookmarked = false
-        ) {
-            
+        is BriefingArticleUiState.Error -> {
+            // Error
         }
+        is BriefingArticleUiState.Success -> {
+            val news = uiState.article.data
 
-        RelatedNewsSection(
-            relatedNewsList = listOf(
-                BriefingArticleRelated(
-                    id = 1,
-                    press = "KBS충북",
-                    title = "배터리 혁명은 현대 산업과 일상 생활에 혁명적인 변화를 가져왔다.",
-                    url = "https://naver.com"
-                ),
-                BriefingArticleRelated(
-                    id = 2,
-                    press = "KBS충북",
-                    title = "배터리 혁명은 현대 산업과 일상 생활에 혁명적인 변화를 가져왔다.",
-                    url = "https://naver.com"
-                ),
-            )
-        ) { url ->
-            val webPage: Uri = Uri.parse(url)
-            val intent = Intent(Intent.ACTION_VIEW, webPage)
-            startActivity(context, intent, null)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(BriefingTheme.colorScheme.BackgroundWhite)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                TopBar(
+                    onBack = navigateUp,
+                ) {
+                    // 공유하기 기능
+                }
+
+                NewsDetailHeader(
+                    title = news.title,
+                    category = news.category,
+                    ranks = news.ranks,
+                    date = news.date,
+                    timeOfDay = news.timeOfDay,
+                    gptModel = news.gptModel
+                )
+
+                NewsSummarySection(
+                    title = news.title,
+                    content = news.content,
+                )
+
+                Spacer(modifier = Modifier.height(65.dp))
+
+                ScrapButton(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    isBookmarked = news.isScrap
+                ) {
+                    if (news.isScrap) {
+                        unScrap(news.id)
+                    } else {
+                        setScrap(news.id)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(43.dp))
+
+                RelatedNewsSection(
+                    relatedNewsList = news.articles
+                ) { url ->
+                    val webPage: Uri = Uri.parse(url)
+                    val intent = Intent(Intent.ACTION_VIEW, webPage)
+                    startActivity(context, intent, null)
+                }
+            }
         }
     }
 }
@@ -184,7 +220,11 @@ private fun NewsSummarySection(
 private fun NewsDetailHeader(
     modifier: Modifier = Modifier,
     title: String,
-    category: String
+    category: BriefingArticleCategory,
+    ranks: Int,
+    date: String,
+    timeOfDay: TimeOfDay,
+    gptModel: String
 ) {
     Column(
         modifier = modifier
@@ -192,7 +232,10 @@ private fun NewsDetailHeader(
     ) {
         Spacer(modifier = Modifier.height(13.dp))
 
-        NewsCategoryLabel(category = category)
+        NewsCategoryLabel(
+            category = category,
+            ranks = ranks
+        )
 
         Spacer(modifier = Modifier.height(13.dp))
 
@@ -208,7 +251,10 @@ private fun NewsDetailHeader(
 
         Spacer(modifier = Modifier.height(7.dp))
 
-        NewsDate(date = "2023.10.31 아침")
+        NewsDate(
+            date = "$date ${stringResource(id = timeOfDay.getStringResId())}",
+            gptModel = gptModel
+        )
 
         Spacer(modifier = Modifier.height(11.dp))
 
@@ -226,7 +272,8 @@ private fun NewsDetailHeader(
 
 @Composable
 private fun NewsCategoryLabel(
-    category: String
+    category: BriefingArticleCategory,
+    ranks: Int
 ) {
     Box(
         modifier = Modifier
@@ -240,7 +287,7 @@ private fun NewsCategoryLabel(
             )
     ) {
         Text(
-            text = category,
+            text = "${stringResource(id = category.getStringResId())} $ranks",
             style = TextStyle(
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.Normal,
@@ -254,7 +301,8 @@ private fun NewsCategoryLabel(
 
 @Composable
 private fun NewsDate(
-    date: String
+    date: String,
+    gptModel: String
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -281,7 +329,7 @@ private fun NewsDate(
         )
 
         Text(
-            text = "GPT-3로 생성됨",
+            text = stringResource(id = R.string.generated_engine, gptModel),
             style = TextStyle(
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.Normal,
@@ -318,7 +366,7 @@ private fun ScrapButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "+ 스크랩",
+                text = stringResource(id = R.string.scrap),
                 style = TextStyle(
                     fontFamily = Pretendard,
                     fontWeight = FontWeight.Medium,
@@ -338,10 +386,10 @@ private fun RelatedNewsSection(
     onClickNews: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = 21.dp)
+        modifier = modifier.padding(horizontal = 21.dp)
     ) {
         Text(
-            text = "관련 기사",
+            text = stringResource(id = R.string.related_articles),
             style = TextStyle(
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.SemiBold,
@@ -431,5 +479,22 @@ private fun RelatedNewsItem(
             ),
             color = BriefingTheme.colorScheme.TextGray
         )
+    }
+}
+
+private fun TimeOfDay.getStringResId(): Int {
+    return when (this) {
+        TimeOfDay.MORNING -> R.string.time_of_day_morning
+        TimeOfDay.EVENING -> R.string.time_of_day_evening
+    }
+}
+
+private fun BriefingArticleCategory.getStringResId(): Int {
+    return when (this) {
+        BriefingArticleCategory.KOREA -> R.string.category_korea
+        BriefingArticleCategory.GLOBAL -> R.string.category_global
+        BriefingArticleCategory.SOCIAL -> R.string.category_social
+        BriefingArticleCategory.SCIENCE -> R.string.category_science
+        BriefingArticleCategory.ECONOMY -> R.string.category_economy
     }
 }

@@ -9,6 +9,7 @@ import store.newsbriefing.app.feature.bookmark.bookmarkScreen
 import store.newsbriefing.app.feature.bookmark.navigateToBookmark
 import store.newsbriefing.app.feature.home.homeScreen
 import store.newsbriefing.app.feature.home.navigateToHome
+import store.newsbriefing.app.feature.newsdetail.navigateToNewsDetail
 import store.newsbriefing.app.feature.newsdetail.newsDetailScreen
 import store.newsbriefing.app.feature.setting.navigateToSetting
 import store.newsbriefing.app.feature.setting.settingScreen
@@ -26,13 +27,15 @@ fun BriefingNavHost(
         homeScreen(
             showSnackbar = appState::showSnackBar,
             navigateToSettingRoute = appState.navController::navigateToSetting,
-            navigateToBookmarkRoute = appState.navController::navigateToBookmark
+            navigateToBookmarkRoute = appState.navController::navigateToBookmark,
+            navigateToNewsDetail = appState.navController::navigateToNewsDetail
         )
         bookmarkScreen(
             showSnackbar = appState::showSnackBar
         )
         newsDetailScreen(
-            showSnackbar = appState::showSnackBar
+            showSnackbar = appState::showSnackBar,
+            navigateUp = appState.navController::navigateUp
         )
         settingScreen(
             showSnackbar = appState::showSnackBar

@@ -13,7 +13,8 @@ fun NavController.navigateToHome() {
 fun NavGraphBuilder.homeScreen(
     showSnackbar: (String) -> Unit,
     navigateToBookmarkRoute: () -> Unit,
-    navigateToSettingRoute: () -> Unit
+    navigateToSettingRoute: () -> Unit,
+    navigateToNewsDetail: (String) -> Unit
 ) {
     composable(
         route = homeRoute
@@ -21,7 +22,8 @@ fun NavGraphBuilder.homeScreen(
         HomeRoute(
             showSnackbar = showSnackbar,
             navigateToBookmarkRoute = navigateToBookmarkRoute,
-            navigateToSettingRoute = navigateToSettingRoute
+            navigateToSettingRoute = navigateToSettingRoute,
+            navigateToNewsDetail = navigateToNewsDetail
         )
     }
 }

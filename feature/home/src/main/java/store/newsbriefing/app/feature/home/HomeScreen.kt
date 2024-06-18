@@ -66,6 +66,7 @@ internal fun HomeRoute(
     showSnackbar: (String) -> Unit,
     navigateToBookmarkRoute: () -> Unit,
     navigateToSettingRoute: () -> Unit,
+    navigateToNewsDetail: (String) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle(
@@ -87,7 +88,8 @@ internal fun HomeRoute(
         showSnackbar = showSnackbar,
         loadBriefings = homeViewModel::loadBriefings,
         navigateToBookmarkRoute = navigateToBookmarkRoute,
-        navigateToSettingRoute = navigateToSettingRoute
+        navigateToSettingRoute = navigateToSettingRoute,
+        navigateToNewsDetail = navigateToNewsDetail
     )
 }
 
@@ -112,7 +114,8 @@ internal fun HomeScreen(
     loadBriefings: (BriefingArticleCategory, Boolean) -> Unit,
     showSnackbar: (String) -> Unit = { },
     navigateToBookmarkRoute: () -> Unit = { },
-    navigateToSettingRoute: () -> Unit = { }
+    navigateToSettingRoute: () -> Unit = { },
+    navigateToNewsDetail: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -170,8 +173,8 @@ internal fun HomeScreen(
                         else -> emptyList()
                     }
                 } ?: emptyList()
-            ) {
-
+            ) { articleId ->
+                navigateToNewsDetail("$articleId")
             }
         }
     }

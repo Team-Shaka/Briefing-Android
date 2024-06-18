@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="category_korea">한국</string>
+    <string name="category_global">세계</string>
+    <string name="category_social">사회</string>
+    <string name="category_science">과학</string>
+    <string name="category_economy">경제</string>
+
+    <string name="time_of_day_morning">아침</string>
+    <string name="time_of_day_evening">저녁</string>
+
+    <string name="generated_engine">%s로 생성됨</string>
+    <string name="scrap">+ 스크랩</string>
+    <string name="related_articles">관련 기사</string>
+</resources>
