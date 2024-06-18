@@ -1,7 +1,7 @@
 package store.newsbriefing.app.core.data.repository.model
 
-import store.newsbriefing.app.core.common.util.toZoneDateTime
 import store.newsbriefing.app.core.model.Scrap
+import store.newsbriefing.app.core.model.TimeOfDay
 import store.newsbriefing.app.core.network.model.NetworkScrap
 
 fun NetworkScrap.asExternalModel() = Scrap(
@@ -9,7 +9,7 @@ fun NetworkScrap.asExternalModel() = Scrap(
     ranks = ranks,
     title = title,
     subtitle = subtitle,
-    date = date.toZoneDateTime(),
+    date = date,
     gptModel = gptModel,
-    timeOfDay = timeOfDay
+    timeOfDay = TimeOfDay.fromValue(timeOfDay)
 )

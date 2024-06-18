@@ -10,7 +10,6 @@ import store.newsbriefing.app.core.common.util.BriefingLogger
 import store.newsbriefing.app.core.common.util.EventFlow
 import store.newsbriefing.app.core.common.util.MutableEventFlow
 import store.newsbriefing.app.core.common.util.asEventFlow
-import store.newsbriefing.app.core.data.repository.MemberRepository
 import store.newsbriefing.app.core.domain.SignInWithSocialProviderUseCase
 import store.newsbriefing.app.core.model.SocialProvider
 import javax.inject.Inject
@@ -22,7 +21,6 @@ sealed class SignInEvent {
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val memberRepository: MemberRepository,
     private val signInWithSocialProviderUseCase: SignInWithSocialProviderUseCase
 ) : ViewModel() {
     val eventFlow: EventFlow<SignInEvent>

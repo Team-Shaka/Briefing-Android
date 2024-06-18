@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_bookmark">보관함</string>
+
+    <string name="time_of_day_morning">아침</string>
+    <string name="time_of_day_evening">저녁</string>
+
+    <string name="generated_engine">%s로 생성됨</string>
+</resources>

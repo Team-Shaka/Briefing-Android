@@ -31,7 +31,9 @@ fun BriefingNavHost(
             navigateToNewsDetail = appState.navController::navigateToNewsDetail
         )
         bookmarkScreen(
-            showSnackbar = appState::showSnackBar
+            showSnackbar = appState::showSnackBar,
+            navigateUp = appState.navController::navigateUp,
+            navigateToNewsDetail = appState.navController::navigateToNewsDetail
         )
         newsDetailScreen(
             showSnackbar = appState::showSnackBar,

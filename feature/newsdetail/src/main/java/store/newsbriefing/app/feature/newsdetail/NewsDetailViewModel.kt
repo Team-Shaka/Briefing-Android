@@ -14,8 +14,8 @@ import store.newsbriefing.app.core.common.util.EventFlow
 import store.newsbriefing.app.core.common.util.MutableEventFlow
 import store.newsbriefing.app.core.common.util.asEventFlow
 import store.newsbriefing.app.core.data.repository.BriefingRepository
+import store.newsbriefing.app.core.data.repository.MemberTokenRepository
 import store.newsbriefing.app.core.data.repository.ScrapRepository
-import store.newsbriefing.app.core.data.repository.impl.DefaultMemberTokenRepository
 import store.newsbriefing.app.core.model.BriefingArticle
 import javax.inject.Inject
 
@@ -38,7 +38,7 @@ class NewsDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val briefingRepository: BriefingRepository,
     private val scrapRepository: ScrapRepository,
-    private val memberTokenRepository: DefaultMemberTokenRepository
+    private val memberTokenRepository: MemberTokenRepository
 ) : ViewModel() {
 
     private val newsDetailArgs = NewsDetailArgs(savedStateHandle)
@@ -58,7 +58,7 @@ class NewsDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadBriefingArticle(id: Long) = viewModelScope.launch {
+    private fun loadBriefingArticle(id: Long) = viewModelScope.launch {
         briefingRepository.getBriefingArticle(articleId = id).collect { news ->
             _uiState.update {
                 it.copy(

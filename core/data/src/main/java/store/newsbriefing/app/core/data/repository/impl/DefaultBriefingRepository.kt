@@ -6,7 +6,7 @@ import store.newsbriefing.app.core.data.repository.BriefingRepository
 import store.newsbriefing.app.core.data.repository.model.asExternalModel
 import store.newsbriefing.app.core.model.BriefingArticle
 import store.newsbriefing.app.core.model.BriefingArticleCategory
-import store.newsbriefing.app.core.model.BriefingCategoryArticles
+import store.newsbriefing.app.core.model.BriefingCategoryArticle
 import store.newsbriefing.app.core.network.datasource.BriefingNetworkDataSource
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ internal class DefaultBriefingRepository @Inject constructor(
 ) : BriefingRepository {
     override suspend fun getBriefingArticleSummaries(
         briefingArticleCategory: BriefingArticleCategory,
-    ): Flow<BriefingCategoryArticles> = flow {
+    ): Flow<BriefingCategoryArticle> = flow {
         val summaries = briefingNetworkDataSource.getBriefingArticleSummaries(
             briefingArticleCategory,
             null,

@@ -19,87 +19,91 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
+import store.newsbriefing.app.core.designsystem.LoadingDialog
 import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
 import store.newsbriefing.app.core.designsystem.theme.Pretendard
 import store.newsbriefing.app.core.model.Scrap
-import java.time.ZonedDateTime
+import store.newsbriefing.app.core.model.TimeOfDay
 
 @Composable
 internal fun BookmarkRoute(
-    showSnackbar: (String) -> Unit
+    showSnackbar: (String) -> Unit,
+    navigateUp: () -> Unit,
+    navigateToNewsDetail: (String) -> Unit,
+    bookmarkViewModel: BookmarkViewModel = hiltViewModel()
 ) {
-    BookmarkScreen(
-        showSnackbar = showSnackbar
+    val uiState by bookmarkViewModel.uiState.collectAsStateWithLifecycle(
+        lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
     )
-}
 
-@Preview
-@Composable
-fun BookmarkScrrenPreview() {
-    BriefingTheme {
-        BookmarkScreen(
-            showSnackbar = {}
-        )
+    LaunchedEffect(Unit) {
+        bookmarkViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is BookmarkEvent.ErrorOccurred -> {
+                    showSnackbar(event.message)
+                }
+            }
+        }
     }
+
+    BookmarkScreen(
+        uiState = uiState,
+        showSnackbar = showSnackbar,
+        navigateUp = navigateUp,
+        navigateToNewsDetail = navigateToNewsDetail
+    )
 }
 
 @Composable
 internal fun BookmarkScreen(
-    showSnackbar: (String) -> Unit
+    uiState: BookmarkUiState,
+    showSnackbar: (String) -> Unit,
+    navigateUp: () -> Unit,
+    navigateToNewsDetail: (String) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BriefingTheme.colorScheme.BackgroundWhite)
-            .verticalScroll(rememberScrollState())
-    ) {
-        TopBar {
-
+    when (uiState.articles) {
+        is BookmarkArticleUiState.Loading -> {
+            LoadingDialog()
         }
+        is BookmarkArticleUiState.Error -> {
+            // Error
+        }
+        is BookmarkArticleUiState.Success -> {
+            val bookmarkArticles = uiState.articles.data
 
-        repeat(3) {
-            BookmarkSection(
-                date = "2023.11.01(수) 오후",
-                items = listOf(
-                    Scrap(
-                        briefingId = 1,
-                        ranks = 1,
-                        title = "제목",
-                        subtitle = "부제목",
-                        date = ZonedDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone),
-                        timeOfDay = "오전 10:00",
-                        gptModel = "GPT-3",
-                    ),
-                    Scrap(
-                        briefingId = 2,
-                        ranks = 2,
-                        title = "제목",
-                        subtitle = "부제목",
-                        date = ZonedDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone),
-                        timeOfDay = "오전 10:00",
-                        gptModel = "GPT-3",
-                    ),
-                    Scrap(
-                        briefingId = 3,
-                        ranks = 3,
-                        title = "제목",
-                        subtitle = "부제목",
-                        date = ZonedDateTime.of(2023, 1, 1, 0, 0, 0, 0, ZonedDateTime.now().zone),
-                        timeOfDay = "오전 10:00",
-                        gptModel = "GPT-3",
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(BriefingTheme.colorScheme.BackgroundWhite)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                TopBar {
+                    navigateUp()
+                }
+
+                bookmarkArticles.forEach {
+                    BookmarkSection(
+                        date = it.date,
+                        items = it.scraps,
+                        onItemClick = navigateToNewsDetail
                     )
-                )
-            )
+                }
+            }
         }
     }
 }
@@ -128,7 +132,7 @@ private fun TopBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center),
-            text = "보관함",
+            text = stringResource(id = R.string.title_bookmark),
             style = TextStyle(
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.Medium,
@@ -144,7 +148,8 @@ private fun TopBar(
 @Composable
 private fun BookmarkSection(
     date: String,
-    items: List<Scrap>
+    items: List<Scrap>,
+    onItemClick: (String) -> Unit,
 ) {
     Column {
         Text(
@@ -167,7 +172,7 @@ private fun BookmarkSection(
 
         items.forEachIndexed { index, item ->
             BookmarkItem(item = item) {
-
+                onItemClick("${item.briefingId}")
             }
 
             if (index != items.size - 1) {
@@ -234,7 +239,7 @@ private fun BookmarkItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${item.date} ${item.timeOfDay}",
+                text = "${item.date} ${stringResource(id = item.timeOfDay.getStringResId())}",
                 style = TextStyle(
                     fontFamily = Pretendard,
                     fontWeight = FontWeight.Normal,
@@ -252,7 +257,7 @@ private fun BookmarkItem(
             )
 
             Text(
-                text = "${item.gptModel}로 생성됨",
+                text = stringResource(id = R.string.generated_engine, item.gptModel),
                 style = TextStyle(
                     fontFamily = Pretendard,
                     fontWeight = FontWeight.Normal,
@@ -262,5 +267,12 @@ private fun BookmarkItem(
                 )
             )
         }
+    }
+}
+
+private fun TimeOfDay.getStringResId(): Int {
+    return when (this) {
+        TimeOfDay.MORNING -> R.string.time_of_day_morning
+        TimeOfDay.EVENING -> R.string.time_of_day_evening
     }
 }

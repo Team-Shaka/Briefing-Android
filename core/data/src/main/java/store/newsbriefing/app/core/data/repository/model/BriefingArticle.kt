@@ -4,7 +4,7 @@ import store.newsbriefing.app.core.model.BriefingArticle
 import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.BriefingArticleRelated
 import store.newsbriefing.app.core.model.BriefingArticleSummary
-import store.newsbriefing.app.core.model.BriefingCategoryArticles
+import store.newsbriefing.app.core.model.BriefingCategoryArticle
 import store.newsbriefing.app.core.model.TimeOfDay
 import store.newsbriefing.app.core.network.model.NetworkBriefingArticle
 import store.newsbriefing.app.core.network.model.NetworkBriefingArticleRelated
@@ -14,11 +14,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-fun NetworkBriefingCategoryArticles.asExternalModel(): BriefingCategoryArticles {
+fun NetworkBriefingCategoryArticles.asExternalModel(): BriefingCategoryArticle {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault())
     val parsedDate = dateFormat.parse(createdAt) ?: Date()
 
-    return BriefingCategoryArticles(
+    return BriefingCategoryArticle(
         createdAt = parsedDate,
         briefings = briefings.map { it.asExternalModel() }
     )

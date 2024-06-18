@@ -14,7 +14,7 @@ import store.newsbriefing.app.core.common.util.MutableEventFlow
 import store.newsbriefing.app.core.common.util.asEventFlow
 import store.newsbriefing.app.core.data.repository.BriefingRepository
 import store.newsbriefing.app.core.model.BriefingArticleCategory
-import store.newsbriefing.app.core.model.BriefingCategoryArticles
+import store.newsbriefing.app.core.model.BriefingCategoryArticle
 import javax.inject.Inject
 
 sealed class HomeEvent {
@@ -27,7 +27,7 @@ data class HomeUiState(
 
 sealed interface BriefingCategoryArticleUiState {
     data object None : BriefingCategoryArticleUiState
-    data class Success(val categoryArticles: BriefingCategoryArticles) : BriefingCategoryArticleUiState
+    data class Success(val categoryArticles: BriefingCategoryArticle) : BriefingCategoryArticleUiState
     data object Error : BriefingCategoryArticleUiState
     data object Loading : BriefingCategoryArticleUiState
 }

@@ -9,7 +9,10 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
+
     api(projects.core.model)
     api(projects.core.common)
     api(projects.core.designsystem)
+    api(projects.core.domain)
 }
