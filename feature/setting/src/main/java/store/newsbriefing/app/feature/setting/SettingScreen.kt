@@ -1,5 +1,7 @@
 package store.newsbriefing.app.feature.setting
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,42 +18,64 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
 import store.newsbriefing.app.core.designsystem.theme.Pretendard
 
 @Composable
 internal fun SettingRoute(
-    showSnackbar: (String) -> Unit
+    showSnackbar: (String) -> Unit,
+    navigateUp: () -> Unit,
+    navigateToSignIn: () -> Unit,
+    appVersion: String,
+    settingViewModel: SettingViewModel = hiltViewModel()
 ) {
-    SettingScreen(
-        showSnackbar = showSnackbar
-    )
-}
-
-@Preview
-@Composable
-fun SettingScrrenPreview() {
-    BriefingTheme {
-        SettingScreen(
-            showSnackbar = {}
-        )
+    LaunchedEffect(Unit) {
+        settingViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is SettingEvent.ErrorOccurred -> {
+                    showSnackbar(event.message)
+                }
+                is SettingEvent.Logout, is SettingEvent.DeleteMember -> {
+                    navigateToSignIn()
+                }
+            }
+        }
     }
+
+    SettingScreen(
+        showSnackbar = showSnackbar,
+        navigateUp = navigateUp,
+        logout = settingViewModel::logout,
+        deleteMember = settingViewModel::deleteMember,
+        appVersion = appVersion
+    )
 }
 
 @Composable
 internal fun SettingScreen(
-    showSnackbar: (String) -> Unit
+    showSnackbar: (String) -> Unit,
+    navigateUp: () -> Unit,
+    logout: () -> Unit,
+    deleteMember: () -> Unit,
+    appVersion: String
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -59,43 +83,61 @@ internal fun SettingScreen(
             .verticalScroll(rememberScrollState())
     ) {
         TopBar {
+            navigateUp()
+        }
+
+        SettingTitle(stringResource(id = R.string.subscription_service))
+        SettingItem(stringResource(id = R.string.briefing_premium)) {
 
         }
 
-        SettingTitle("구독 서비스")
-        SettingItem("Briefing Premium") {
-
+        SettingTitle(stringResource(id = R.string.app_information))
+        AppVersionItem(appVersion)
+        SettingItem(stringResource(id = R.string.feedback_and_inquiry)) {
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://forms.gle/HQXmEBkQ6wyW9jiw7"))
+            startActivity(context, intent, null)
+        }
+        SettingItem(stringResource(id = R.string.version_note)) {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://onve.notion.site/Briefing-8af692ff041c4fc6931b2fc897411e6d?pvs=4")
+            )
+            startActivity(context, intent, null)
         }
 
-        SettingTitle("앱 정보")
-        AppVersionItem("2.0.0")
-        SettingItem("피드백 및 문의하기") {
-
+        SettingTitle(stringResource(id = R.string.privacy_policy))
+        SettingItem(stringResource(id = R.string.terms_of_service)) {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://sites.google.com/view/brieifinguse/%ED%99%88")
+            )
+            startActivity(context, intent, null)
         }
-        SettingItem("버전 노트") {
-
+        SettingItem(stringResource(id = R.string.data_processing_policy)) {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://sites.google.com/view/briefing-private/%ED%99%88")
+            )
+            startActivity(context, intent, null)
+        }
+        SettingItem(stringResource(id = R.string.precautions)) {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://onve.notion.site/Briefing-e1cb17e2e7c54d3b9a7036b29ee9b11a?pvs=4")
+            )
+            startActivity(context, intent, null)
         }
 
-        SettingTitle("개인 정보 보호")
-        SettingItem("이용 약관") {
-
-        }
-        SettingItem("개인정보처리방침") {
-
-        }
-        SettingItem("유의 사항") {
-
-        }
-
-        SettingTitle("회원 관리")
-        SettingItem("로그아웃") {
-
+        SettingTitle(stringResource(id = R.string.user_management))
+        SettingItem(stringResource(id = R.string.logout)) {
+            logout()
         }
         SettingItem(
-            "회원 탈퇴",
+            stringResource(id = R.string.withdrawal),
             BriefingTheme.colorScheme.TextRed
         ) {
-
+            deleteMember()
         }
     }
 }
@@ -124,7 +166,7 @@ private fun TopBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center),
-            text = "설정",
+            text = stringResource(id = R.string.setting_title),
             style = TextStyle(
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.Medium,
@@ -211,7 +253,7 @@ private fun AppVersionItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text ="앱 버전",
+            text = stringResource(id = R.string.app_version),
             style = TextStyle(
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.Normal,

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setting_title">설정</string>
+    <string name="subscription_service">구독 서비스</string>
+    <string name="briefing_premium">Briefing Premium</string>
+    <string name="app_information">앱 정보</string>
+    <string name="app_version">앱 버전</string>
+    <string name="feedback_and_inquiry">피드백 및 문의하기</string>
+    <string name="version_note">버전 노트</string>
+    <string name="privacy_policy">개인 정보 보호</string>
+    <string name="terms_of_service">이용 약관</string>
+    <string name="data_processing_policy">개인정보처리방침</string>
+    <string name="precautions">유의 사항</string>
+    <string name="user_management">회원 관리</string>
+    <string name="logout">로그아웃</string>
+    <string name="withdrawal">회원 탈퇴</string>
+</resources>

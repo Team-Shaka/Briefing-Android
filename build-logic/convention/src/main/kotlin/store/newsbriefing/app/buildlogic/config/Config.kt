@@ -9,7 +9,7 @@ object Config {
         compileSdkVersion = 34,
         applicationId = "com.dev.briefing",
         versionCode = 1,
-        versionName = "1.0",
+        versionName = "2.0.0",
         nameSpace = "com.dev.briefing"
     )
     val jvm = JvmConfig(

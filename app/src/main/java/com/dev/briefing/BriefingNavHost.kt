@@ -3,6 +3,7 @@ package com.dev.briefing
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import store.newsbriefing.app.feature.auth.navigateToSignIn
 import store.newsbriefing.app.feature.auth.signInRoute
 import store.newsbriefing.app.feature.auth.signInScreen
 import store.newsbriefing.app.feature.bookmark.bookmarkScreen
@@ -40,7 +41,10 @@ fun BriefingNavHost(
             navigateUp = appState.navController::navigateUp
         )
         settingScreen(
-            showSnackbar = appState::showSnackBar
+            showSnackbar = appState::showSnackBar,
+            navigateUp = appState.navController::navigateUp,
+            navigateToSignIn = appState.navController::navigateToSignIn,
+            appVersion = BuildConfig.VERSION_NAME
         )
         signInScreen(
             showSnackBar = appState::showSnackBar,

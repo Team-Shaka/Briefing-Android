@@ -11,13 +11,19 @@ fun NavController.navigateToSetting() {
 }
 
 fun NavGraphBuilder.settingScreen(
-    showSnackbar: (String) -> Unit
+    showSnackbar: (String) -> Unit,
+    navigateUp: () -> Unit,
+    navigateToSignIn: () -> Unit,
+    appVersion: String
 ) {
     composable(
         route = settingRoute
     ) {
         SettingRoute(
-            showSnackbar = showSnackbar
+            showSnackbar = showSnackbar,
+            navigateUp = navigateUp,
+            navigateToSignIn = navigateToSignIn,
+            appVersion = appVersion
         )
     }
 }

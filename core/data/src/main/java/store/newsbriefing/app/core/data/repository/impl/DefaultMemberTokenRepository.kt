@@ -1,7 +1,6 @@
 package store.newsbriefing.app.core.data.repository.impl
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import store.newsbriefing.app.core.data.repository.MemberTokenRepository
 import store.newsbriefing.app.core.datastore.datasource.UserAuthTokenDataSource
@@ -14,6 +13,10 @@ class DefaultMemberTokenRepository @Inject constructor(private val userAuthToken
         return userAuthTokenDataSource.getUserAuthToken().map {
             MemberToken(it.memberId, it.accessToken, it.refreshToken)
         }
+    }
+
+    override suspend fun clearMemberToken() {
+        userAuthTokenDataSource.clear()
     }
 
     override suspend fun saveMemberToken(
