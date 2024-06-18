@@ -22,14 +22,14 @@ sealed class HomeEvent {
 }
 
 data class HomeUiState(
-    val articles: HashMap<BriefingArticleCategory, BriefingArticleUiState>
+    val articles: HashMap<BriefingArticleCategory, BriefingCategoryArticleUiState>
 )
 
-sealed interface BriefingArticleUiState {
-    data object None : BriefingArticleUiState
-    data class Success(val categoryArticles: BriefingCategoryArticles) : BriefingArticleUiState
-    data object Error : BriefingArticleUiState
-    data object Loading : BriefingArticleUiState
+sealed interface BriefingCategoryArticleUiState {
+    data object None : BriefingCategoryArticleUiState
+    data class Success(val categoryArticles: BriefingCategoryArticles) : BriefingCategoryArticleUiState
+    data object Error : BriefingCategoryArticleUiState
+    data object Loading : BriefingCategoryArticleUiState
 }
 
 @HiltViewModel
@@ -41,10 +41,10 @@ class HomeViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(
         HomeUiState(
             articles = hashMapOf(
-                BriefingArticleCategory.SOCIAL to BriefingArticleUiState.None,
-                BriefingArticleCategory.SCIENCE to BriefingArticleUiState.None,
-                BriefingArticleCategory.GLOBAL to BriefingArticleUiState.None,
-                BriefingArticleCategory.ECONOMY to BriefingArticleUiState.None
+                BriefingArticleCategory.SOCIAL to BriefingCategoryArticleUiState.None,
+                BriefingArticleCategory.SCIENCE to BriefingCategoryArticleUiState.None,
+                BriefingArticleCategory.GLOBAL to BriefingCategoryArticleUiState.None,
+                BriefingArticleCategory.ECONOMY to BriefingCategoryArticleUiState.None
             )
         )
     )
@@ -57,8 +57,8 @@ class HomeViewModel @Inject constructor(
         category: BriefingArticleCategory,
         isRefresh: Boolean
     ) = viewModelScope.launch {
-        val isLoading = _uiState.value.articles[category] is BriefingArticleUiState.Loading
-        val isLoaded = _uiState.value.articles[category] is BriefingArticleUiState.Success
+        val isLoading = _uiState.value.articles[category] is BriefingCategoryArticleUiState.Loading
+        val isLoaded = _uiState.value.articles[category] is BriefingCategoryArticleUiState.Success
 
         if (isLoading || (isLoaded && !isRefresh)) {
             return@launch
@@ -70,7 +70,7 @@ class HomeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     articles = HashMap(it.articles.toMutableMap().apply {
-                        this[category] = BriefingArticleUiState.Loading
+                        this[category] = BriefingCategoryArticleUiState.Loading
                     })
                 )
             }
@@ -78,7 +78,7 @@ class HomeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     articles = HashMap(it.articles.toMutableMap().apply {
-                        this[category] = BriefingArticleUiState.Success(
+                        this[category] = BriefingCategoryArticleUiState.Success(
                             categoryArticles = summaries
                         )
                     })

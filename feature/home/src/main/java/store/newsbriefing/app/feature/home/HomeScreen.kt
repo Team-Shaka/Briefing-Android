@@ -147,7 +147,7 @@ internal fun HomeScreen(
 
         val isRefreshing = uiState.articles[categories[pagerState.currentPage].category]?.let {
             when (it) {
-                is BriefingArticleUiState.Loading -> true
+                is BriefingCategoryArticleUiState.Loading -> true
                 else -> false
             }
         } ?: false
@@ -160,13 +160,13 @@ internal fun HomeScreen(
                 },
                 updatedAt = uiState.articles[categories[page].category]?.let {
                     when (it) {
-                        is BriefingArticleUiState.Success -> it.categoryArticles.createdAt
+                        is BriefingCategoryArticleUiState.Success -> it.categoryArticles.createdAt
                         else -> null
                     }
                 },
                 articles = uiState.articles[categories[page].category]?.let {
                     when (it) {
-                        is BriefingArticleUiState.Success -> it.categoryArticles.briefings
+                        is BriefingCategoryArticleUiState.Success -> it.categoryArticles.briefings
                         else -> emptyList()
                     }
                 } ?: emptyList()
