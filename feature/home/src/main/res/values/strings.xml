@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">Briefing</string>
+    <string name="tab_society">사회</string>
+    <string name="tab_science">과학</string>
+    <string name="tab_global">글로벌</string>
+    <string name="tab_economy">경제</string>
+</resources>

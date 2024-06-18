@@ -8,7 +8,7 @@ import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.TimeOfDay
 import store.newsbriefing.app.core.network.datasource.BriefingNetworkDataSource
 import store.newsbriefing.app.core.network.model.NetworkBriefingArticle
-import store.newsbriefing.app.core.network.model.NetworkBriefingArticleSummary
+import store.newsbriefing.app.core.network.model.NetworkBriefingCategoryArticles
 import store.newsbriefing.app.core.network.model.RetrofitCommonResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -21,7 +21,7 @@ private interface RetrofitBriefingApi {
         @Query("type") type: String,
         @Query("date") date: String?,
         @Query("timeOfDay") timeOfDay: String?
-    ): RetrofitCommonResponse<List<NetworkBriefingArticleSummary>>
+    ): RetrofitCommonResponse<NetworkBriefingCategoryArticles>
 
     @GET("briefings/{id}")
     suspend fun getBriefingArticle(@Path("id") id: Long): RetrofitCommonResponse<NetworkBriefingArticle>
@@ -39,7 +39,7 @@ internal class RetrofitBriefingNetworkDataSource @Inject constructor(
         briefingArticleCategory: BriefingArticleCategory,
         dateLocalDate: LocalDate?,
         timeOfDay: TimeOfDay?
-    ): List<NetworkBriefingArticleSummary> {
+    ): NetworkBriefingCategoryArticles {
         return api.getBriefingArticleSummaries(
             type = briefingArticleCategory.typeId,
             date = dateLocalDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),

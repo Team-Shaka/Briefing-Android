@@ -3,7 +3,7 @@ package store.newsbriefing.app.core.network.datasource
 import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.TimeOfDay
 import store.newsbriefing.app.core.network.model.NetworkBriefingArticle
-import store.newsbriefing.app.core.network.model.NetworkBriefingArticleSummary
+import store.newsbriefing.app.core.network.model.NetworkBriefingCategoryArticles
 import java.time.LocalDate
 
 interface BriefingNetworkDataSource {
@@ -11,7 +11,7 @@ interface BriefingNetworkDataSource {
         briefingArticleCategory: BriefingArticleCategory,
         dateLocalDate: LocalDate?,
         timeOfDay: TimeOfDay?
-    ): List<NetworkBriefingArticleSummary>
+    ): NetworkBriefingCategoryArticles
 
     suspend fun getBriefingArticle(articleId: Long): NetworkBriefingArticle
 }

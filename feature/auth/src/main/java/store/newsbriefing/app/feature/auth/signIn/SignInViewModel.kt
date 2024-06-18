@@ -1,30 +1,18 @@
 package store.newsbriefing.app.feature.auth.signIn
 
-import android.content.Context
-import android.util.Log
-import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
-import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import store.newsbriefing.app.core.common.util.BriefingLogger
 import store.newsbriefing.app.core.common.util.EventFlow
 import store.newsbriefing.app.core.common.util.MutableEventFlow
 import store.newsbriefing.app.core.common.util.asEventFlow
 import store.newsbriefing.app.core.data.repository.MemberRepository
 import store.newsbriefing.app.core.domain.SignInWithSocialProviderUseCase
-import store.newsbriefing.app.core.model.MemberToken
 import store.newsbriefing.app.core.model.SocialProvider
-import store.newsbriefing.app.core.ui.BuildConfig
-import java.util.UUID
 import javax.inject.Inject
 
 sealed class SignInEvent {
@@ -68,6 +56,5 @@ class SignInViewModel @Inject constructor(
             }
         }
     }
-
 
 }

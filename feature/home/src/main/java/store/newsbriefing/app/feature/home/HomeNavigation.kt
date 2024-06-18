@@ -1,6 +1,5 @@
 package store.newsbriefing.app.feature.home
 
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -12,15 +11,17 @@ fun NavController.navigateToHome() {
 }
 
 fun NavGraphBuilder.homeScreen(
-    showSnackbar: (String) -> Unit
+    showSnackbar: (String) -> Unit,
+    navigateToBookmarkRoute: () -> Unit,
+    navigateToSettingRoute: () -> Unit
 ) {
     composable(
         route = homeRoute
     ) {
         HomeRoute(
             showSnackbar = showSnackbar,
-            navigateToBookmarkRoute = { },
-            navigateToSettingRoute = { }
+            navigateToBookmarkRoute = navigateToBookmarkRoute,
+            navigateToSettingRoute = navigateToSettingRoute
         )
     }
 }

@@ -6,9 +6,11 @@ import androidx.navigation.compose.NavHost
 import store.newsbriefing.app.feature.auth.signInRoute
 import store.newsbriefing.app.feature.auth.signInScreen
 import store.newsbriefing.app.feature.bookmark.bookmarkScreen
+import store.newsbriefing.app.feature.bookmark.navigateToBookmark
 import store.newsbriefing.app.feature.home.homeScreen
 import store.newsbriefing.app.feature.home.navigateToHome
 import store.newsbriefing.app.feature.newsdetail.newsDetailScreen
+import store.newsbriefing.app.feature.setting.navigateToSetting
 import store.newsbriefing.app.feature.setting.settingScreen
 
 @Composable
@@ -22,7 +24,9 @@ fun BriefingNavHost(
         startDestination = signInRoute
     ) {
         homeScreen(
-            showSnackbar = appState::showSnackBar
+            showSnackbar = appState::showSnackBar,
+            navigateToSettingRoute = appState.navController::navigateToSetting,
+            navigateToBookmarkRoute = appState.navController::navigateToBookmark
         )
         bookmarkScreen(
             showSnackbar = appState::showSnackBar
@@ -35,8 +39,7 @@ fun BriefingNavHost(
         )
         signInScreen(
             showSnackBar = appState::showSnackBar,
-            navigateToHome = {
-                appState.navController.navigateToHome()
-            })
+            navigateToHome = appState.navController::navigateToHome
+        )
     }
 }

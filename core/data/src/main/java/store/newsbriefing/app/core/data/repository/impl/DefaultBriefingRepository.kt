@@ -6,27 +6,22 @@ import store.newsbriefing.app.core.data.repository.BriefingRepository
 import store.newsbriefing.app.core.data.repository.model.asExternalModel
 import store.newsbriefing.app.core.model.BriefingArticle
 import store.newsbriefing.app.core.model.BriefingArticleCategory
-import store.newsbriefing.app.core.model.BriefingArticleSummary
-import store.newsbriefing.app.core.model.TimeOfDay
+import store.newsbriefing.app.core.model.BriefingCategoryArticles
 import store.newsbriefing.app.core.network.datasource.BriefingNetworkDataSource
-import java.time.LocalDate
+import javax.inject.Inject
 
-internal class DefaultBriefingRepository(
+internal class DefaultBriefingRepository @Inject constructor(
     private val briefingNetworkDataSource: BriefingNetworkDataSource
 ) : BriefingRepository {
     override suspend fun getBriefingArticleSummaries(
         briefingArticleCategory: BriefingArticleCategory,
-        dateLocalDate: LocalDate?,
-        timeOfDay: TimeOfDay?
-    ): Flow<List<BriefingArticleSummary>> = flow {
+    ): Flow<BriefingCategoryArticles> = flow {
         val summaries = briefingNetworkDataSource.getBriefingArticleSummaries(
             briefingArticleCategory,
-            dateLocalDate,
-            timeOfDay
+            null,
+            null
         )
-        emit(summaries.map {
-            it.asExternalModel()
-        })
+        emit(summaries.asExternalModel())
     }
 
     override suspend fun getBriefingArticle(articleId: Long): Flow<BriefingArticle> {

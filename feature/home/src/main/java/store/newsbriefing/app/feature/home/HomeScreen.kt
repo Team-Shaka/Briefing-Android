@@ -1,7 +1,7 @@
 package store.newsbriefing.app.feature.home
 
-import android.graphics.Paint.Align
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,23 +22,27 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,35 +50,45 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import store.newsbriefing.app.core.common.util.toBriefingDate
 import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
 import store.newsbriefing.app.core.designsystem.theme.ProductSans
-import store.newsbriefing.app.core.model.BriefingArticle
+import store.newsbriefing.app.core.model.BriefingArticleCategory
 import store.newsbriefing.app.core.model.BriefingArticleSummary
-import java.time.LocalDateTime
 import java.util.Date
 
 @Composable
 internal fun HomeRoute(
     showSnackbar: (String) -> Unit,
     navigateToBookmarkRoute: () -> Unit,
-    navigateToSettingRoute: () -> Unit
+    navigateToSettingRoute: () -> Unit,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val uiState by homeViewModel.uiState.collectAsStateWithLifecycle(
+        lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+    )
+
+    LaunchedEffect(Unit) {
+        homeViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is HomeEvent.ErrorOccurred -> {
+                    showSnackbar(event.message)
+                }
+            }
+        }
+    }
+
     HomeScreen(
+        uiState = uiState,
         showSnackbar = showSnackbar,
+        loadBriefings = homeViewModel::loadBriefings,
         navigateToBookmarkRoute = navigateToBookmarkRoute,
         navigateToSettingRoute = navigateToSettingRoute
     )
-
-}
-
-@Composable
-@Preview
-internal fun HomeScreenPreview(){
-    BriefingTheme {
-        HomeScreen()
-    }
 }
 
 @Composable
@@ -91,48 +105,11 @@ internal fun ArticleItemPreview(){
     }
 }
 
-val categories = HomeCategory.entries
-val articles = listOf(
-    BriefingArticleSummary(
-        id = 1,
-        ranks = 1,
-        title = "배터리 혁명",
-        subtitle = "2차 전지 혁명으로 인한 놀라운 발견과 문제 해결",
-        scrapCount = 1000
-    ),
-    BriefingArticleSummary(
-        id = 2,
-        ranks = 2,
-        title = "럼피스킨병 확진",
-        subtitle = "영남 지역에서 첫 럼피스킨병 확진자가 발생하였다.",
-        scrapCount = 1000
-    ),
-    BriefingArticleSummary(
-        id = 3,
-        ranks = 3,
-        title = "이스라엘 가자지구",
-        subtitle = "이스라엘 군이 가자지구 내 군사작전을 계속하면서 우려가 계속되고 있다.",
-        scrapCount = 1000
-    ),
-    BriefingArticleSummary(
-        id = 4,
-        ranks = 4,
-        title = "국힘 혁신위",
-        subtitle = "'대사면'건의에 대한 반발이 일어나고 있다.",
-        scrapCount = 1000
-    ),
-    BriefingArticleSummary(
-        id = 5,
-        ranks = 5,
-        title = "리커창 추모",
-        subtitle = "리커창에 대한 추모의 열기가 계속되고 있다.",
-        scrapCount = 1000
-    )
-)
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun HomeScreen(
+    uiState: HomeUiState,
+    loadBriefings: (BriefingArticleCategory, Boolean) -> Unit,
     showSnackbar: (String) -> Unit = { },
     navigateToBookmarkRoute: () -> Unit = { },
     navigateToSettingRoute: () -> Unit = { }
@@ -142,52 +119,145 @@ internal fun HomeScreen(
             .fillMaxSize()
             .background(color = BriefingTheme.colorScheme.BackgroundWhite),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 18.dp, end = 28.dp, top = 28.dp, bottom = 28.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Briefing",
-                style = BriefingTheme.typography.SubtitleStyleBold,
-                color = BriefingTheme.colorScheme.PrimaryBlue
-            )
+        HomeHeader(
+            navigateToBookmarkRoute = navigateToBookmarkRoute,
+            navigateToSettingRoute = navigateToSettingRoute
+        )
 
-            Row(
-                modifier = Modifier.align(Alignment.Bottom),
-                horizontalArrangement = Arrangement.spacedBy(21.dp)
-            ) {
-                ActionBarButton(iconDrawableRes = R.drawable.ic_action_bar_bookmark,) {
-                    navigateToBookmarkRoute()
-                }
+        val categories = HomeCategory.entries
 
-                ActionBarButton(iconDrawableRes = R.drawable.ic_action_bar_setting) {
-                    navigateToSettingRoute()
-                }
+        val pagerState = rememberPagerState(pageCount = { categories.size })
+        var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+        val scope = rememberCoroutineScope()
+
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.currentPage }.collect { page ->
+                selectedTabIndex = page
+                loadBriefings(categories[page].category, false)
             }
         }
 
-        val pagerState = rememberPagerState(pageCount = { categories.size })
-        val scope = rememberCoroutineScope()
-
-        var selectedItemIndex by remember { mutableStateOf(0) }
-
         ScrollableTabRow(
-            items = categories.map { it.title },
-            selectedItemIndex = selectedItemIndex
+            items = categories.map { stringResource(it.title) },
+            selectedItemIndex = selectedTabIndex
         ) {
-            selectedItemIndex = it
+            scope.launch { pagerState.animateScrollToPage(it) }
         }
+
+        val isRefreshing = uiState.articles[categories[pagerState.currentPage].category]?.let {
+            when (it) {
+                is BriefingArticleUiState.Loading -> true
+                else -> false
+            }
+        } ?: false
 
         HorizontalPager(state = pagerState) { page ->
-            ArticleListSection(
-                articles = articles,
-                onClick = { },
-                onRefresh = {}
-            )
-        }
+            HomeScreenArticleListSection(
+                isRefreshing = isRefreshing,
+                onRefresh = {
+                    loadBriefings(categories[page].category, true)
+                },
+                updatedAt = uiState.articles[categories[page].category]?.let {
+                    when (it) {
+                        is BriefingArticleUiState.Success -> it.categoryArticles.createdAt
+                        else -> null
+                    }
+                },
+                articles = uiState.articles[categories[page].category]?.let {
+                    when (it) {
+                        is BriefingArticleUiState.Success -> it.categoryArticles.briefings
+                        else -> emptyList()
+                    }
+                } ?: emptyList()
+            ) {
 
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun HomeScreenArticleListSection(
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    updatedAt: Date?,
+    articles: List<BriefingArticleSummary>,
+    onArticleClick: (Int) -> Unit
+) {
+    val pullToRefreshState = rememberPullToRefreshState()
+    val scaleFraction = if (pullToRefreshState.isRefreshing) 1f else
+        LinearOutSlowInEasing.transform(pullToRefreshState.progress).coerceIn(0f, 1f)
+
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if (pullToRefreshState.isRefreshing && !isRefreshing) {
+            onRefresh()
+        }
+    }
+
+    LaunchedEffect(isRefreshing) {
+        if (!isRefreshing && pullToRefreshState.isRefreshing) {
+            pullToRefreshState.endRefresh()
+        }
+        if (isRefreshing && !pullToRefreshState.isRefreshing) {
+            pullToRefreshState.startRefresh()
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(pullToRefreshState.nestedScrollConnection),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        PullToRefreshContainer(
+            modifier = Modifier.graphicsLayer(
+                scaleX = scaleFraction,
+                scaleY = scaleFraction
+            ),
+            state = pullToRefreshState
+        )
+
+        ArticleListSection(
+            articles = articles,
+            updatedAt = updatedAt,
+            onClick = onArticleClick
+        ) {
+            onRefresh()
+        }
+    }
+}
+
+@Composable
+private fun HomeHeader(
+    navigateToBookmarkRoute: () -> Unit,
+    navigateToSettingRoute: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 18.dp, end = 28.dp, top = 28.dp, bottom = 28.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(id = R.string.home_title),
+            style = BriefingTheme.typography.SubtitleStyleBold,
+            color = BriefingTheme.colorScheme.PrimaryBlue
+        )
+
+        Row(
+            modifier = Modifier.align(Alignment.Bottom),
+            horizontalArrangement = Arrangement.spacedBy(21.dp)
+        ) {
+            ActionBarButton(iconDrawableRes = R.drawable.ic_action_bar_bookmark,) {
+                navigateToBookmarkRoute()
+            }
+
+            ActionBarButton(iconDrawableRes = R.drawable.ic_action_bar_setting) {
+                navigateToSettingRoute()
+            }
+        }
     }
 }
 
@@ -254,12 +324,13 @@ private fun ArticleListDate(
 @Composable
 private fun ArticleListSection(
     articles: List<BriefingArticleSummary>,
+    updatedAt: Date?,
     onClick: (Int) -> Unit,
     onRefresh: () -> Unit
 ) {
     LazyColumn {
         item {
-            ArticleListDate(Date().toBriefingDate()) {
+            ArticleListDate(updatedAt?.toBriefingDate() ?: "") {
                 onRefresh()
             }
             Spacer(
