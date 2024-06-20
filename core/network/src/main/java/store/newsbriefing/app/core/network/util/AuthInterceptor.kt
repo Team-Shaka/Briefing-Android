@@ -36,7 +36,7 @@ class AuthInterceptor @Inject constructor(
 
         if (response.code == 200 || response.code == 201) {
             BriefingLogger.d(
-                "response code : ${response.code} ${
+                "response co : ${response.code} ${
                     response.peekBody(2048).string()
                 }"
             )

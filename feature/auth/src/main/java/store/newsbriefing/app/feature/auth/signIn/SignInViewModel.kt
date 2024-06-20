@@ -11,6 +11,7 @@ import store.newsbriefing.app.core.common.util.EventFlow
 import store.newsbriefing.app.core.common.util.MutableEventFlow
 import store.newsbriefing.app.core.common.util.asEventFlow
 import store.newsbriefing.app.core.domain.SignInWithSocialProviderUseCase
+import store.newsbriefing.app.core.exception.BriefingApiErrorException
 import store.newsbriefing.app.core.model.SocialProvider
 import javax.inject.Inject
 
@@ -40,6 +41,9 @@ class SignInViewModel @Inject constructor(
                         _eventFlow.emit(SignInEvent.NavigateToMain)
                     } catch (e: GoogleIdTokenParsingException) {
                         _eventFlow.emit(SignInEvent.ErrorOccurred("Failed to parse Google ID token"))
+                    }catch (e : BriefingApiErrorException) {
+                        BriefingLogger.e("Failed to sign in with Google ID token: ${e.message}")
+                        _eventFlow.emit(SignInEvent.ErrorOccurred(e.message ?: "Failed to sign in with Google ID token"))
                     } catch (e: Exception) {
                         BriefingLogger.e("Failed to sign in with Google ID token: ${e.message}")
                         _eventFlow.emit(SignInEvent.ErrorOccurred("Failed to sign in with Google ID token"))

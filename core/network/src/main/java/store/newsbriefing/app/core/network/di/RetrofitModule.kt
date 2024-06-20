@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import store.newsbriefing.app.core.common.BuildConfig
+import store.newsbriefing.app.core.network.retrofit.calladapter.ResultCallAdapterFactory
 import store.newsbriefing.app.core.network.util.AuthInterceptor
 import javax.inject.Singleton
 
@@ -47,6 +48,7 @@ object RetrofitModule {
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(ResultCallAdapterFactory())
             .client(okHttpClient)
             .baseUrl(if (BuildConfig.DEBUG) BuildConfig.API_URL_DEBUG else BuildConfig.API_URL_RELEASE)
             .build()
