@@ -8,8 +8,8 @@ import store.newsbriefing.app.feature.auth.signInRoute
 import store.newsbriefing.app.feature.auth.signInScreen
 import store.newsbriefing.app.feature.bookmark.bookmarkScreen
 import store.newsbriefing.app.feature.bookmark.navigateToBookmark
+import store.newsbriefing.app.feature.home.homeRoute
 import store.newsbriefing.app.feature.home.homeScreen
-import store.newsbriefing.app.feature.home.navigateToHome
 import store.newsbriefing.app.feature.newsdetail.navigateToNewsDetail
 import store.newsbriefing.app.feature.newsdetail.newsDetailScreen
 import store.newsbriefing.app.feature.setting.navigateToSetting
@@ -48,7 +48,14 @@ fun BriefingNavHost(
         )
         signInScreen(
             showSnackBar = appState::showSnackBar,
-            navigateToHome = appState.navController::navigateToHome
+            navigateToHome = {
+                appState.navController.navigate(
+                    route = homeRoute,
+                    builder = {
+                        popUpTo(signInRoute) { inclusive = true }
+                    }
+                )
+            }
         )
     }
 }
