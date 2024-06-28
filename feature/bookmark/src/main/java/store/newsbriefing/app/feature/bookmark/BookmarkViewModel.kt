@@ -44,12 +44,16 @@ class BookmarkViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            loadBriefingScrapArticleUseCase().collect {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        articles = BookmarkArticleUiState.Success(it)
-                    )
+            try {
+                loadBriefingScrapArticleUseCase().collect {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            articles = BookmarkArticleUiState.Success(it)
+                        )
+                    }
                 }
+            } catch (e: Exception) {
+                _eventFlow.emit(BookmarkEvent.ErrorOccurred(e.toString()))
             }
         }
     }

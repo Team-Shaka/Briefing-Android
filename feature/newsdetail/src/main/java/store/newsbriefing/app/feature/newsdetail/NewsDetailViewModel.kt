@@ -7,15 +7,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import store.newsbriefing.app.core.common.util.EventFlow
 import store.newsbriefing.app.core.common.util.MutableEventFlow
 import store.newsbriefing.app.core.common.util.asEventFlow
 import store.newsbriefing.app.core.data.repository.BriefingRepository
-import store.newsbriefing.app.core.data.repository.MemberTokenRepository
-import store.newsbriefing.app.core.data.repository.ScrapRepository
+import store.newsbriefing.app.core.domain.SetScrapUseCase
+import store.newsbriefing.app.core.domain.UnScrapUseCase
 import store.newsbriefing.app.core.model.BriefingArticle
 import javax.inject.Inject
 
@@ -37,8 +36,8 @@ sealed interface BriefingArticleUiState {
 class NewsDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val briefingRepository: BriefingRepository,
-    private val scrapRepository: ScrapRepository,
-    private val memberTokenRepository: MemberTokenRepository
+    private val setScrapUseCase: SetScrapUseCase,
+    private val unScrapUseCase: UnScrapUseCase
 ) : ViewModel() {
 
     private val newsDetailArgs = NewsDetailArgs(savedStateHandle)
@@ -70,32 +69,40 @@ class NewsDetailViewModel @Inject constructor(
 
     fun setScrap(id: Long) {
         viewModelScope.launch {
-            val memberId = memberTokenRepository.getMemberToken().first().memberId
-            scrapRepository.setScrap(memberId, id)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    article = when (val currentNews = currentState.article) {
-                        is BriefingArticleUiState.Success ->
-                            currentNews.copy(data = currentNews.data.copy(isScrap = true))
-                        else -> currentNews
-                    }
-                )
+            try {
+                setScrapUseCase(id)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        article = when (val currentNews = currentState.article) {
+                            is BriefingArticleUiState.Success ->
+                                currentNews.copy(data = currentNews.data.copy(isScrap = true))
+
+                            else -> currentNews
+                        }
+                    )
+                }
+            } catch (e: Exception) {
+                _eventFlow.emit(NewsDetailEvent.ErrorOccurred(e.toString()))
             }
         }
     }
 
     fun unScrap(id: Long) {
         viewModelScope.launch {
-            val memberId = memberTokenRepository.getMemberToken().first().memberId
-            scrapRepository.unScrap(memberId, id)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    article = when (val currentNews = currentState.article) {
-                        is BriefingArticleUiState.Success ->
-                            currentNews.copy(data = currentNews.data.copy(isScrap = false))
-                        else -> currentNews
-                    }
-                )
+            try {
+                unScrapUseCase(id)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        article = when (val currentNews = currentState.article) {
+                            is BriefingArticleUiState.Success ->
+                                currentNews.copy(data = currentNews.data.copy(isScrap = false))
+
+                            else -> currentNews
+                        }
+                    )
+                }
+            } catch (e: Exception) {
+                _eventFlow.emit(NewsDetailEvent.ErrorOccurred(e.toString()))
             }
         }
     }

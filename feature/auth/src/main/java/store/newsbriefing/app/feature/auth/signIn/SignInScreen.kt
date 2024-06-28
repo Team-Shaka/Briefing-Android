@@ -39,7 +39,7 @@ private fun createGoogleIdOption(): GetGoogleIdOption {
         .setFilterByAuthorizedAccounts(true)
         .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
         .setAutoSelectEnabled(true)
-        .setNonce(generateNonce())
+        //.setNonce(generateNonce())
         .build()
 }
 

@@ -64,23 +64,34 @@ class HomeViewModel @Inject constructor(
             return@launch
         }
 
-        briefingRepository.getBriefingArticleSummaries(
-            briefingArticleCategory = category
-        ).onStart {
-            _uiState.update {
-                it.copy(
-                    articles = HashMap(it.articles.toMutableMap().apply {
-                        this[category] = BriefingCategoryArticleUiState.Loading
-                    })
-                )
+        try {
+            briefingRepository.getBriefingArticleSummaries(
+                briefingArticleCategory = category
+            ).onStart {
+                _uiState.update {
+                    it.copy(
+                        articles = HashMap(it.articles.toMutableMap().apply {
+                            this[category] = BriefingCategoryArticleUiState.Loading
+                        })
+                    )
+                }
+            }.collect { summaries ->
+                _uiState.update {
+                    it.copy(
+                        articles = HashMap(it.articles.toMutableMap().apply {
+                            this[category] = BriefingCategoryArticleUiState.Success(
+                                categoryArticles = summaries
+                            )
+                        })
+                    )
+                }
             }
-        }.collect { summaries ->
+        } catch (e: Exception) {
+            _eventFlow.emit(HomeEvent.ErrorOccurred(e.toString()))
             _uiState.update {
                 it.copy(
                     articles = HashMap(it.articles.toMutableMap().apply {
-                        this[category] = BriefingCategoryArticleUiState.Success(
-                            categoryArticles = summaries
-                        )
+                        this[category] = BriefingCategoryArticleUiState.Error
                     })
                 )
             }

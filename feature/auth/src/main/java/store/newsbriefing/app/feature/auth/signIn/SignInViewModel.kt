@@ -41,7 +41,7 @@ class SignInViewModel @Inject constructor(
                         _eventFlow.emit(SignInEvent.NavigateToMain)
                     } catch (e: GoogleIdTokenParsingException) {
                         _eventFlow.emit(SignInEvent.ErrorOccurred("Failed to parse Google ID token"))
-                    }catch (e : BriefingApiErrorException) {
+                    } catch (e : BriefingApiErrorException) {
                         BriefingLogger.e("Failed to sign in with Google ID token: ${e.message}")
                         _eventFlow.emit(SignInEvent.ErrorOccurred(e.message ?: "Failed to sign in with Google ID token"))
                     } catch (e: Exception) {

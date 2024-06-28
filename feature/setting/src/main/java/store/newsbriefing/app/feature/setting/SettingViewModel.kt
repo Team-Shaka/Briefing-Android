@@ -3,13 +3,12 @@ package store.newsbriefing.app.feature.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import store.newsbriefing.app.core.common.util.EventFlow
 import store.newsbriefing.app.core.common.util.MutableEventFlow
 import store.newsbriefing.app.core.common.util.asEventFlow
-import store.newsbriefing.app.core.data.repository.MemberRepository
 import store.newsbriefing.app.core.data.repository.MemberTokenRepository
+import store.newsbriefing.app.core.domain.DeleteMemberUseCase
 import javax.inject.Inject
 
 sealed class SettingEvent {
@@ -20,7 +19,7 @@ sealed class SettingEvent {
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val memberRepository: MemberRepository,
+    private val deleteMemberUseCase: DeleteMemberUseCase,
     private val memberTokenRepository: MemberTokenRepository
 ) : ViewModel() {
     val eventFlow: EventFlow<SettingEvent>
@@ -28,13 +27,20 @@ class SettingViewModel @Inject constructor(
     private val _eventFlow = MutableEventFlow<SettingEvent>()
 
     fun logout() = viewModelScope.launch {
-        memberTokenRepository.clearMemberToken()
-        _eventFlow.emit(SettingEvent.Logout)
+        try {
+            memberTokenRepository.clearMemberToken()
+            _eventFlow.emit(SettingEvent.Logout)
+        } catch (e: Exception) {
+            _eventFlow.emit(SettingEvent.ErrorOccurred(e.toString()))
+        }
     }
 
     fun deleteMember() = viewModelScope.launch {
-        val userId = memberTokenRepository.getMemberToken().first().memberId
-        memberRepository.deleteMember(userId)
-        _eventFlow.emit(SettingEvent.DeleteMember)
+        try {
+            deleteMemberUseCase()
+            _eventFlow.emit(SettingEvent.DeleteMember)
+        } catch (e: Exception) {
+            _eventFlow.emit(SettingEvent.ErrorOccurred(e.toString()))
+        }
     }
 }
