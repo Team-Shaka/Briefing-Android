@@ -9,4 +9,5 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.android)
+    api(libs.billing.client)
 }

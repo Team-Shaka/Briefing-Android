@@ -8,7 +8,7 @@ object Config {
         targetSdkVersion = 34,
         compileSdkVersion = 34,
         applicationId = "com.dev.briefing",
-        versionCode = 1,
+        versionCode = 9,
         versionName = "2.0.0",
         nameSpace = "com.dev.briefing"
     )

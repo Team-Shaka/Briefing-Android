@@ -1,5 +1,8 @@
 package store.newsbriefing.app.feature.setting
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -33,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.collectLatest
+import store.newsbriefing.app.core.common.util.InAppUtil
 import store.newsbriefing.app.core.designsystem.theme.BriefingTheme
 import store.newsbriefing.app.core.designsystem.theme.Pretendard
 
@@ -75,6 +79,7 @@ internal fun SettingScreen(
     appVersion: String
 ) {
     val context = LocalContext.current
+    val activity = context.findActivity()
 
     Column(
         modifier = Modifier
@@ -88,7 +93,7 @@ internal fun SettingScreen(
 
         SettingTitle(stringResource(id = R.string.subscription_service))
         SettingItem(stringResource(id = R.string.briefing_premium)) {
-
+            InAppUtil.getPay(activity, "premium")
         }
 
         SettingTitle(stringResource(id = R.string.app_information))
@@ -274,4 +279,15 @@ private fun AppVersionItem(
             )
         )
     }
+}
+
+private fun Context.findActivity(): Activity {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) {
+            return context
+        }
+        context = context.baseContext
+    }
+    throw IllegalStateException("Activity not found")
 }
